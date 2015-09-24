@@ -2,22 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Usuario;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-use App\Livro;
-use PhpParser\Node\Expr\PostDec;
-
-class LivroController extends Controller
+class UsuarioController extends Controller
 {
 
-    private $livro;
+    private $usuario;
 
-    public function __construct(Livro $livro){
-        $this->livro = $livro;
+    public function __construct(Usuario $usuario){
+        $this->usuario = $usuario;
     }
-
     /**
      * Display a listing of the resource.
      *
@@ -25,8 +22,8 @@ class LivroController extends Controller
      */
     public function index()
     {
-        $livros = $this->livro->all();
-        return view('livro.index', ['livros' => $livros]);
+        //
+
     }
 
     /**
@@ -37,7 +34,13 @@ class LivroController extends Controller
     public function create()
     {
         //
-
+        $usuario = new Usuario();
+        $usuario->nome = "Nilton";
+        $usuario->email = "email@dominio.com";
+        $usuario->endereco = "";
+        $usuario->senha = "laoasld";
+        $usuario->save();
+        
     }
 
     /**
@@ -60,7 +63,8 @@ class LivroController extends Controller
     public function show($id)
     {
         //
-        echo "Livro!";
+        $user = $this->usuario->find($id);
+        return view('usuario.show')->with('usuario', $user);
     }
 
     /**
