@@ -11,6 +11,8 @@
 |
 */
 
+Route::resource('livro', 'LivroController');
+
 Route::get('/', function () {
     return 'Hello World02';
 });
