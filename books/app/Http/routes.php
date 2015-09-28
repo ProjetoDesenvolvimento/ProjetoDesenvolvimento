@@ -17,5 +17,14 @@ Route::resource('usuario', 'UsuarioController');
 
 
 Route::get('/', function () {
-    return 'Hello World';
+    return 'Hello World02';
 });
+
+Route::get('/livros/cadastro','LivrosController@cadastro');
+Route::post('/livros/cadastroliv','LivrosController@cadastrarlivro');
+Route::get('/livros/tenho/{id}','LivrosController@tenho');
+Route::post('/livros/tenho/{id}','LivrosController@cadastrarLivroUsuario');
+
+Route::get('/request/ajax/asinc/livros/getlivros/type/{type}/criteria/{criteria}', ['as' => 'verdato', 'uses' => 'LivrosController@verdato']);
+Route::get('/livros/feed','LivrosController@obterfeed');
+
