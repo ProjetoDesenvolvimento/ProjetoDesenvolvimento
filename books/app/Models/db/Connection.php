@@ -19,7 +19,7 @@ class Connection {
 	}
 
 	function initConnectionStrings() {
-		$this -> connectionStrings = array("host=localhost dbname=postgres user=postgres password=chesdev");
+		$this -> connectionStrings = array("host=localhost dbname=postgres user=postgres password=asenna");
 	}
 
 	function initConnection($connectionIndex) {

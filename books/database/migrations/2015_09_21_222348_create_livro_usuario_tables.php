@@ -111,7 +111,6 @@ class CreateLivroUsuarioTables extends Migration
             $table->increments('id');
             $table->string('nome',80);
             $table->string('email',80);
-            $table->string('endereco',80);
             $table->string('senha',80);
             $table->timestamps();
         });

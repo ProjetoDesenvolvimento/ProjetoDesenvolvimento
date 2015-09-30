@@ -2,19 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Usuario;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class UsuarioController extends Controller
+class TrocaController extends Controller
 {
-
-    private $usuario;
-
-    public function __construct(Usuario $usuario){
-        $this->usuario = $usuario;
-    }
     /**
      * Display a listing of the resource.
      *
@@ -23,7 +16,6 @@ class UsuarioController extends Controller
     public function index()
     {
         //
-
     }
 
     /**
@@ -33,8 +25,7 @@ class UsuarioController extends Controller
      */
     public function create()
     {
-        return view("usuario.create", array("title"=>"Cadastro"));
-
+        //
     }
 
     /**
@@ -45,14 +36,7 @@ class UsuarioController extends Controller
      */
     public function store(Request $request)
     {
-        $usuario = new Usuario();
-        $usuario->nome = $request->get("nome");
-        $usuario->email = $request->get("email");
-        $usuario->senha = $request->get("senha");
-        $res = $usuario->save();
-
-        return "<script>parent.resultStore('$res')</script>";
-
+        //
     }
 
     /**
@@ -64,8 +48,6 @@ class UsuarioController extends Controller
     public function show($id)
     {
         //
-        $user = $this->usuario->find($id);
-        return view('usuario.show')->with('usuario', $user);
     }
 
     /**

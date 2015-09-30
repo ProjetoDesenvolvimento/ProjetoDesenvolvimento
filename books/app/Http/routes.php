@@ -11,14 +11,11 @@
 |
 */
 
+
+Route::get('/', 'MainController@index');
+
 Route::resource('livro', 'LivroController');
 Route::resource('usuario', 'UsuarioController');
-
-
-
-Route::get('/', function () {
-    return 'Hello World02';
-});
 
 Route::get('/livros/cadastro','LivrosController@cadastro');
 Route::post('/livros/cadastroliv','LivrosController@cadastrarlivro');

@@ -98,7 +98,7 @@ class GestorLibros {
 	function searchBooksByISBN($isbn) {
 		//echo "o criterio é".$isbn;
 		$db_con = new Connection();
-		$query = "SELECT id, isbn, descripcao, paginas, editora, link, imgprev,  datapublica, titulo FROM livro
+		$query = "SELECT * FROM livro
 		 where isbn like '%" . $isbn . "%';";
 		$db_con -> executeQuery($query);
 		$livros=$this->getBooksFromDbQuery($db_con);

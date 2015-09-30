@@ -36,7 +36,7 @@ class LivrosController extends Controller
     public function cadastrarLivroUsuario(Request $request)
     {
 
-   $livro = new Livro();
+        $livro = new Livro();
         $id = $request->input("id");
         $isbn = $request->input("isbn");
         $titulo = $request->input("titulo");
@@ -46,7 +46,6 @@ class LivrosController extends Controller
         $paginas = $request->input("paginas");
         $editora = $request->input("editora");
         $linkPrevio = $request->input("linkprevio");
-        $authorscount;
         $imageLink = $request->input("imagenlink");
         $estado=$request->input("estadolivro");
 
@@ -54,7 +53,7 @@ class LivrosController extends Controller
         $user=new User();
         $user->setIdusuario($username);
 
-            $id= isset($id)?$id:'0';
+        $id= isset($id)?$id:'0';
         $isbn= isset($isbn)?$isbn:'';
         $titulo= isset($titulo)?$titulo:"";
         $paginas= isset($paginas) and strlen($paginas)>0?$paginas:0;
@@ -74,26 +73,19 @@ class LivrosController extends Controller
         $livro -> setEstado($estado);
         $livro ->setDono($user);
 
-
-    if($autores){
-        foreach ($autores as $autor) {
-            $livro -> addAutorWithName($autor);
-        }
+        if($autores){
+            foreach ($autores as $autor) {
+                $livro -> addAutorWithName($autor);
+            }
         }
 
         $gestor = new GestorLibros();
         if($gestor -> cadastrarLivro($livro)){
             return View::make('livros.cadastrolusuccess');
         }else{
-           return View::make('livros.tenho',
-         array('livro' => $livro,'erro'=>'si'));
+            return View::make('livros.tenho',
+                array('livro' => $livro,'erro'=>'si'));
         }
-
-
-
-
-
-
     }
     /**
      * Display a listing of the resource.
