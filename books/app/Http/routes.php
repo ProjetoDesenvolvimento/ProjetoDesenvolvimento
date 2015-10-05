@@ -17,11 +17,16 @@ Route::get('/', 'MainController@index');
 Route::resource('livro', 'LivroController');
 Route::resource('usuario', 'UsuarioController');
 
-Route::get('/livros/cadastro','LivrosController@cadastro');
-Route::post('/livros/cadastroliv','LivrosController@cadastrarlivro');
-Route::get('/livros/tenho/{id}','LivrosController@tenho');
-Route::post('/livros/tenho/{id}','LivrosController@cadastrarLivroUsuario');
+//Route::get('/livros/cadastro','LivrosController@cadastro');
+//Route::post('/livros/cadastroliv','LivrosController@cadastrarlivro');
+Route::post('/livros/cadastroliv','LivroController@store');
 
-Route::get('/request/ajax/asinc/livros/getlivros/type/{type}/criteria/{criteria}', ['as' => 'verdato', 'uses' => 'LivrosController@verdato']);
-Route::get('/livros/feed','LivrosController@obterfeed');
+Route::get('/livros/tenho/{idgb}/{id}','LivroController@tenho');
 
+Route::get('/livros/create','LivroController@create');
+Route::get('/livros','LivroController@obterfeed');
+Route::post('/livros/tenho/id/{id}/idgb/{idgb}','LivroController@cadastrarLivroUsuario');
+
+Route::get('/request/ajax/asinc/livros/getlivros/type/{type}/criteria/{criteria}', ['as' => 'verdato', 'uses' => 'LivroController@verdato']);
+Route::get('/livros/feed','LivroController@obterfeed');
+Route::get('/livros/feed/pag/{index}', ['as' => 'obterfeed', 'uses' => 'LivroController@obterfeed']);

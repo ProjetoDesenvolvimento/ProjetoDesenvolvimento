@@ -1,1 +1,1 @@
-<h1>Cadastro sucesso, <a href="<?php echo action('LivrosController@obterfeed');?>"> Ver mais livros</a>
+<h1>Cadastro sucesso,<?php echo "el id generado es ".$livro->id;?> <a href="<?php echo action('LivroController@obterfeed',['pag' =>0 ]);?>"> Ver mais livros</a>

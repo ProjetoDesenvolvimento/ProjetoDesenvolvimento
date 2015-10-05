@@ -5,13 +5,18 @@ namespace App\Models\framework;
 require_once app_path().'/Libraries/Google/GoogleBooks/src/Google/autoload.php';
 use Google_Client;
 use Google_Service_Books;
-require_once app_path().'/Models/Libro.php';
-require_once app_path().'/Models/db/Connection.php';
-require_once app_path().'/Models/User.php';
+use DB;
+use App\Livro;
+use App\Autor;
+use App\Usuario;
+use App\LivroAutor;
+use App\LivroUsuario;
+//require_once app_path().'/Models/Libro.php';
+//require_once app_path().'/Models/db/Connection.php';
+//require_once app_path().'/Models/User.php';
 
-use \App\Models\db\Connection;
-use \App\Models\Livro;
-use \App\Models\User;
+//use \App\Models\db\Connection;
+
 /**
  *Nesta clase se faz a utilização da API de google Books, deixa tudo praticamente para ser utilizado num alto nivel de programação.
  * @author Francisco Coulon
@@ -51,43 +56,6 @@ class GestorLibros {
 		$this -> fields = array("fields" => $this->fieldsString, "maxResults" => $this -> maxResults, "startIndex" => $this -> startIndex);
 	}
 
-	function getBooksFromDbQuery($db_con) {
-		$livros=array();
-		$count=0;
-
-		while ($row = $db_con -> getResultsAssoc()) {//ver livros
-			$book = new Livro();
-			$book -> setId($row["id"]);
-			$book -> setIsbn($row["isbn"]);
-			$book -> setDescripcion($row["descripcao"]);
-			$book -> setPaginas($row["paginas"]);
-			$book -> setEditora($row["editora"]);
-			$book -> setLinkPrevio($row["link"]);
-			$book -> setImageLink($row["imgprev"]);
-			$book -> setDatapublica($row["datapublica"]);
-			$book -> setTitulo($row["titulo"]);
-			$count++;
-			array_push($livros, $book);
-		}
-
-		foreach ($livros as &$livro) {
-		echo "viendo autor".$livro -> getId();
-			$query = "select id,name from autor,livroautor where autor.id=livroautor.idautor and livroautor.idlivro='" . $livro -> getId() . "';";
-			$db_con -> executeQuery($query);
-			echo $query;
-			while ($row = $db_con -> getResultsAssoc()) {//ver autores
-				$livro -> addAutor($row["name"]);
-			}
-		}
-
-		if ($count > 0) {
-			$this -> maxResults = $this -> maxResults- $count;
-			$this -> updateFilters();
-
-		}
-		return $livros;
-
-	}
 
 	/**
 	 * Esta função faz a pesquisa pelo isbn do livro no banco de dados
@@ -97,11 +65,7 @@ class GestorLibros {
 	 */
 	function searchBooksByISBN($isbn) {
 		//echo "o criterio é".$isbn;
-		$db_con = new Connection();
-		$query = "SELECT * FROM livro
-		 where isbn like '%" . $isbn . "%';";
-		$db_con -> executeQuery($query);
-		$livros=$this->getBooksFromDbQuery($db_con);
+ $livros=array();
 
 		if ($this -> maxResults > 0) {
 
@@ -117,20 +81,7 @@ class GestorLibros {
 		return $livros;
 	}
 
-	/**
-	 * Esta função faz a pesquisa pelo isbn do livro
-	 * @param $isbn, o codigo isbn do livro ou parte dele
-	 * @return Um arranjo de livros
-	 *
-	 */
-	function searchGBBooksByISBN($isbn) {
-		echo "o criterio é".$isbn."maximo es ".$this->maxResults;
-		$isbn = $this -> getCleanedCriteria($isbn);
-		$results = $this -> service -> volumes -> listVolumes('isbn:' . $isbn, $this -> fields);
-		$values_ = $results['items'];
 
-		return $this -> getBooksFromResult($values_);
-	}
 
 	/**
 	 * Esta função faz a pesquisa utilizando multiples criterios, par exemplo, podería ser que o usuario precise de pesquiçar pelo isbn
@@ -151,37 +102,7 @@ class GestorLibros {
 	 */
 	function searchBooksByMultipleCriteria($type, $criterio) {
 		//echo "o criterio é".$isbn;
-		$db_con = new Connection();
-		$query = "SELECT id, isbn, descripcao, paginas, editora, link, imgprev,  datapublica, titulo FROM livro
-		 where ";
-		switch ($type) {
-			case 1 :
-				$query .= " isbn like '%" . $criterio . "%' or  titulo like '%" . $criterio . "%' or  descripcao like '%" . $criterio . "%' ";
-				break;
-			case 2 :
-				$query .= " isbn like '%" . $criterio . "%' or  titulo like '%" . $criterio . "%'  ";
-				break;
-			case 3 :
-				$query .= " isbn like '%" . $criterio . "%' or    descripcao like '%" . $criterio . "%' ";
-				break;
-			case 4 :
-				$query .= " isbn like '%" . $criterio . "%'  ";
-				break;
-			case 5 :
-				$query .= " titulo like '%" . $criterio . "%' or  descripcao like '%" . $criterio . "%' ";		break;
-			case 6 :
-					$query .= "   titulo like '%" . $criterio . "%'  ";
-				break;
-			case 7 :
-					$query .= " descripcao like '%" . $criterio . "%' ";
-				break;
-
-			default :
-				break;
-		}
-		$db_con -> executeQuery($query);
-		$livros=$this->getBooksFromDbQuery($db_con);
-
+ $livros=array();
 		if ($this -> maxResults > 0) {
 
 			$extrabooks = $this -> searchGBBooksByMultipleCriteria($type,$criterio);
@@ -285,13 +206,7 @@ class GestorLibros {
 	 *
 	 */
 	function searchBooksByTitle($titulo) {
-		//echo "o criterio é".$isbn;
-		$db_con = new Connection();
-		$query = "SELECT id, isbn, descripcao, paginas, editora, link, imgprev,  datapublica, titulo FROM livro
-		 where titulo like '%" . $titulo . "%';";
-		$db_con -> executeQuery($query);
-		$livros=$this->getBooksFromDbQuery($db_con);
-
+        $livros=array();
 		if ($this -> maxResults > 0) {
 
 			$extrabooks = $this -> searchGBBooksByTitle($titulo);
@@ -305,19 +220,12 @@ class GestorLibros {
 
 	function getBooksByID($id) {
 		//echo "o criterio é".$isbn;
-		$db_con = new Connection();
-		$query = "SELECT id, isbn, descripcao, paginas, editora, link, imgprev,  datapublica, titulo FROM livro
-		 where id = '" . $id . "';";
-		$db_con -> executeQuery($query);
-		$livros=$this->getBooksFromDbQuery($db_con);
-        if(count($livros)>0){
-            return $livros[0];
-        }else{
 
+ $livros=array();
 			$extrabooks = $this -> searchGBBooksById($id);
 			foreach ($extrabooks as $livro) {
 				return $livro;
-			}
+
         }
 
 
@@ -355,13 +263,7 @@ class GestorLibros {
 	 *
 	 */
 	function searchBooksByDescription($subject) {
-		//echo "o criterio é".$isbn;
-		$db_con = new Connection();
-		$query = "SELECT id, isbn, descripcao, paginas, editora, link, imgprev,  datapublica, titulo FROM livro
-		 where descripcao like '%" . $subject . "%';";
-		$db_con -> executeQuery($query);
-		$livros=$this->getBooksFromDbQuery($db_con);
-
+ $livros=array();
 		if ($this -> maxResults > 0) {
 
 			$extrabooks = $this -> searchGBBooksByDescription($subject);
@@ -409,13 +311,7 @@ class GestorLibros {
 	 */
 	function searchBooksByAllCriteria($all) {
 		//echo "o criterio é".$isbn;
-		$db_con = new Connection();
-		$query = "SELECT id, isbn, descripcao, paginas, editora, link, imgprev,  datapublica, titulo FROM livro
-		 where descripcao like '%" . $all . "%' or isbn like '%" . $all . "%' or id like '%" . $all . "%' or
-		 paginas like '%" . $all . "%' or editora like '%" . $all . "%' or link like '%" . $all . "%' or
-		 imgprev like '%" . $all . "%' or datapublica like '%" . $all . "%' or  titulo like '%" . $all . "%'  ;";
-		$db_con -> executeQuery($query);
-		$livros=$this->getBooksFromDbQuery($db_con);
+ $livros=array();
 
 		if ($this -> maxResults > 0) {
 
@@ -450,25 +346,27 @@ class GestorLibros {
 		$values_ = $result;
 		foreach ($values_ as $value) {
 			$book = new Livro();
-			$book -> setTitulo($value['volumeInfo']['title']);
+			$book -> titulo=$value['volumeInfo']['title'];
 
 			$authors = $value['volumeInfo']['authors'];
-			echo var_dump($value);
+			//echo var_dump($value);
             if(count($authors)>0){
 			foreach ($authors as $author) {
-				$book -> addAutor($author);
+                $au=new Autor();
+                $au->nome=$author;
+				$book -> addAutor($au);
 			}
 			}
-			$book -> setId($value['id']);
-			$book -> setPaginas($value['volumeInfo']['pageCount']);
-			$book -> setEditora($value['volumeInfo']['publisher']);
-			$book -> setLinkPrevio($value['volumeInfo']['previewLink']);
-			$book -> setDatapublica($value['volumeInfo']['publishedDate']);
-			$book -> setDescripcion($value['volumeInfo']['description']);
+			$book -> idgb=($value['id']);
+			$book -> paginas=($value['volumeInfo']['pageCount']);
+			//$book -> setEditora($value['volumeInfo']['publisher']);
+			//$book -> setLinkPrevio($value['volumeInfo']['previewLink']);
+			$book -> ano=($value['volumeInfo']['publishedDate']);
+			$book -> descricao=($value['volumeInfo']['description']);
 			if(isset($value['volumeInfo']['industryIdentifiers'])){
-			$book -> setIsbn($value['volumeInfo']['industryIdentifiers'][0]['identifier']);
+			$book -> isbn=($value['volumeInfo']['industryIdentifiers'][0]['identifier']);
 			}
-			$book -> setImageLink($value['volumeInfo']['imageLinks']['thumbnail']);
+			$book -> imagemurl=($value['volumeInfo']['imageLinks']['thumbnail']);
 			array_push($books, $book);
 		}
 
@@ -483,134 +381,14 @@ class GestorLibros {
 		return $criteria;
 	}
 
-	function cadastrarLivro($livro) {
-		$results_final = array();
-		$db_con = new Connection();
-		$db_con -> initTransaction();
-		//$db_con->executeQuery();
-		$query = "SELECT * FROM livro where id='" . $livro -> getId() . "' or isbn='" . $livro -> getIsbn() . "'";
-		$db_con -> executeQuery($query);
-		//$row = $db_con -> getResultsAssoc();
-		//var_dump($row);
-		if (!$row = $db_con -> getResultsAssoc()) {//livro náo existe
-
-			//perform the insert using pg_query
-			$query = "INSERT INTO livro(id, isbn,titulo, descripcao, datapublica, paginas, editora, link, imgprev,       estado)
-    VALUES ('" . $livro -> getId() . "','" . $livro -> getIsbn() . "','" . $livro -> getTitulo() . "','" . $livro -> getDescripcion() . "','" . $livro -> getDatapublica() . "','" . $livro -> getPaginas() . "','" . $livro -> getEditora() . "','" . $livro -> getLinkPrevio() . "','" . $livro -> getImageLink() . "','" . $livro -> getEstado() . "')";
-
-			array_push($results_final, $db_con -> executeQuery($query));
-			//cadastrar authores
-			//	echo $livro->getAutores().var_dump($expression);
-
-			if($livro&&$livro->getAutores()){
-			foreach ($livro->getAutores() as $autor) {
-				$query = "SELECT * FROM autor where name='" . $autor -> getNome() . "'";
-
-				$db_con -> executeQuery($query);
-				if (!$row = $db_con -> getResultsAssoc()) {//autor náo existe
-					$query = "insert into autor(name) values('" . $autor -> getNome() . "')";
-					array_push($results_final, $db_con -> executeQuery($query));
-					$query = "SELECT LASTVAL() as id;";
-					$db_con -> executeQuery($query);
-					if ($row = $db_con -> getResultsAssoc()) {//autor náo existe
-						$idautor = $row["id"];
-						$query = "INSERT INTO livroautor(idautor, idlivro) VALUES ('" . $idautor . "','" . $livro -> getId() . "');";
-						array_push($results_final, $db_con -> executeQuery($query));
-						//echo "entreee";
-					}
-				} else {
-					$query = "select id from autor where id = (select id from autor,livroautor where autor.id=livroautor.idautor and idlivro='" . $livro -> getId() . "' limit 1)  limit 1";
-					$db_con -> executeQuery($query);
-					if (!$row = $db_con -> getResultsAssoc()) {//autor náo tem livro
-						$query = "select id from autor where name= '" . $autor -> getNome() . "'";
-						$db_con -> executeQuery($query);
-						if ($row = $db_con -> getResultsAssoc()) {//autor existe
-							$idautor = $row["id"];
-							$query = "INSERT INTO livroautor(idautor, idlivro) VALUES ('" . $idautor . "','" . $livro -> getId() . "');";
-							array_push($results_final, $db_con -> executeQuery($query));
-							//echo "entre dos ";
-
-						}
-
-					}
-				}
-
-			}
-			}//fin if existe autor
-		}
-
-		//adicionar livro do usuario,
-		//if user has registered the book
-		$query = "SELECT estadolivro FROM livrousuario where idlivro='" . $livro -> getId() . "' and idusuario='" . $livro -> getDono() -> getIdusuario() . "'";
-		$db_con -> executeQuery($query);
-		//$row = $db_con -> getResultsAssoc();
-		//var_dump($row);
-		if (!$row = $db_con -> getResultsAssoc()) {//livro ainda náo cadastrado com o usuario
-			$query = "INSERT INTO livrousuario(idlivro, idusuario, estadolivro)
-		    VALUES ('" . $livro -> getId() . "', '" . $livro -> getDono() -> getIdusuario() . "',  '" . $livro -> getEstado() . "');";
-			array_push($results_final, $db_con -> executeQuery($query));
-		}
-		$commit = true;
-		foreach ($results_final as $result) {
-			if (!$result) {
-				$commit = false;
-			}
-		}
-
-		if ($commit == true) {
-			$db_con -> commitTransaction();
-
-		} else {
-			$db_con -> rollbackTransaction();
-		}
-		return $commit;
-	}
-
-	function cadastrarLivroUsuario($livro){
-        $results_final = array();
-		$db_con = new Connection();
-		$db_con -> initTransaction();
-		//adicionar livro do usuario,
-		//if user has registered the book
-		$query = "SELECT estadolivro FROM livrousuario where idlivro='" . $livro -> getId() . "' and idusuario='" . $livro -> getDono() -> getIdusuario() . "'";
-		$db_con -> executeQuery($query);
-		//$row = $db_con -> getResultsAssoc();
-		//var_dump($row);
-		if (!$row = $db_con -> getResultsAssoc()) {//livro ainda náo cadastrado com o usuario
-			$query = "INSERT INTO livrousuario(idlivro, idusuario, estadolivro)
-		    VALUES ('" . $livro -> getId() . "', '" . $livro -> getDono() -> getIdusuario() . "',  '" . $livro -> getEstado() . "');";
-			array_push($results_final, $db_con -> executeQuery($query));
-		}
-		$commit = true;
-		foreach ($results_final as $result) {
-			if (!$result) {
-				$commit = false;
-			}
-		}
-
-		if ($commit == true) {
-			$db_con -> commitTransaction();
-
-		} else {
-			$db_con -> rollbackTransaction();
-		}
-		return $commit;
-
-	}
 
 function getBooksToFeed($user,$ini=0,$quan=10){
-			$db_con = new Connection();
+
 			$this->maxResults=$quan;
 			$this->startIndex=$ini;
             $this->updateFilters();
-		$query = "select * from sp_getbookstofeed('" . $user->getIdusuario() . "','" . $ini . "','" . $quan . "');";
-		$db_con -> executeQuery($query);
-		$livros=$this->getBooksFromDbQuery($db_con);
-		if(count($livros)>0){
-		//	echo "entreeeeeeeeeeeeeee".count($livros);
-			$thisautor=$livros[0]->getAutores()[0];
-		//	echo " this autor ".$thisautor;
-		}
+
+            $livros=array();
 
 		////echo count($livros);
 		//echo " this max results ".$this->maxResults;
@@ -629,17 +407,55 @@ function getBooksToFeed($user,$ini=0,$quan=10){
 		return $livros;
 }
 
+function cadastrarLivro($livro){
+
+        if(!$livro){
+            return false;
+        }
+
+
+
+        $data=array("isbn"=>$livro->isbn,"idgb"=>$livro->idgb,"titulo"=>$livro->titulo,
+        "descricao"=>$livro->descricao,"ano"=>$livro->ano,"paginas"=>$livro->paginas,
+        "imagemurl"=>$livro->imagemurl,"created_at"=>$livro->created_at,"updated_at"=>$livro->updated_at);
+        $id= Livro::insertGetId($data);
+        $livro->id=$id;
+
+         $livro = Livro::where('id', $livro->id)->first();
+
+        return $livro;
+
 }
 
-/*
- $client = new Google_Client();
- $service = new Google_Service_Books($client);
+function cadastrarAutoresLivro($autores,$livro){
+           //$autores//=$livro->getAutores();
+           $au=array();
+           foreach($autores as $autor){
+           echo "nome ".$autor;
+               if( !Autor::where('nome', '=', $autor)->exists()){
+                $a= new Autor();
+                $a->nome=$autor;
+                $a->save();
+                $a= Autor::where('nome', '=', $autor)->first();
 
- $gestor = new GestorLibros($service);
- //$libros = $gestor -> searchBooksByMultipleCriteria(11,'bruce eckel');
- $libros = $gestor -> searchBooksByTitle('java');
- foreach ($libros as $libro) {
- echo "el libro <br><br>" . $libro -> toString();
- }
- //echo var_dump($resp);*/
+                    if(!LivroAutor::where('autor_id', '=', $a->id)
+                    ->where('livro_id', '=', $livro->id)->exists()){
+
+                        $la=new LivroAutor();
+                        $la->autor_id=$a->id;
+                        $la->livro_id=$livro->id;
+                        $la->save();
+
+                    }
+                }
+           }
+    return true;
+
+  }
+
+
+
+}
+
+
 ?>

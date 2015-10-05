@@ -35,10 +35,12 @@ class CreateLivroUsuarioTables extends Migration
             $table->increments('id');
             $table->string('isbn');
             $table->unique('isbn');
-            $table->string('titulo');
+            $table->string('idgb');
+            $table->unique('idgb');
+            $table->text('titulo');
             $table->index('titulo');
             $table->text('descricao');
-            $table->integer('ano');
+            $table->string('ano');
             $table->integer('paginas');
             $table->text('imagemurl')->default('');
             $table->timestamps();
