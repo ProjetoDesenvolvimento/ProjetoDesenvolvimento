@@ -39,8 +39,8 @@ class GestorLibros {
 	 * Nesta função, a ideia é inicializar os objetos principais da clase.
 	 */
 	function __construct() {
-        $client = new Google_Client();
-        $service1 = new Google_Service_Books($client);
+		$client = new Google_Client();
+		$service1 = new Google_Service_Books($client);
 		$this -> service = $service1;
 		$this -> maxResults = 5;
 		$this -> startIndex = 0;
@@ -64,17 +64,16 @@ class GestorLibros {
 	 *
 	 */
 	function searchBooksByISBN($isbn) {
-		//echo "o criterio é".$isbn;
- $livros=array();
+
+		$livros=array();
 
 		if ($this -> maxResults > 0) {
 
 			$extrabooks = $this -> searchGBBooksByISBN($isbn);
-			//echo "entreeeeeeeeeeeeeeeeeeeeeeeeeee ni seeeeeeeeeeeeeeee";
-            if($extrabooks){
-			foreach ($extrabooks as $livro) {
-				array_push($livros, $livro);
-			}
+			if($extrabooks){
+				foreach ($extrabooks as $livro) {
+					array_push($livros, $livro);
+				}
 			}
 		}
 
@@ -102,7 +101,7 @@ class GestorLibros {
 	 */
 	function searchBooksByMultipleCriteria($type, $criterio) {
 		//echo "o criterio é".$isbn;
- $livros=array();
+		$livros=array();
 		if ($this -> maxResults > 0) {
 
 			$extrabooks = $this -> searchGBBooksByMultipleCriteria($type,$criterio);
@@ -206,7 +205,7 @@ class GestorLibros {
 	 *
 	 */
 	function searchBooksByTitle($titulo) {
-        $livros=array();
+		$livros=array();
 		if ($this -> maxResults > 0) {
 
 			$extrabooks = $this -> searchGBBooksByTitle($titulo);
@@ -221,12 +220,12 @@ class GestorLibros {
 	function getBooksByID($id) {
 		//echo "o criterio é".$isbn;
 
- $livros=array();
-			$extrabooks = $this -> searchGBBooksById($id);
-			foreach ($extrabooks as $livro) {
-				return $livro;
+		$livros=array();
+		$extrabooks = $this -> searchGBBooksById($id);
+		foreach ($extrabooks as $livro) {
+			return $livro;
 
-        }
+		}
 
 
 		return null;
@@ -241,6 +240,17 @@ class GestorLibros {
 
 		return $books;
 	}
+
+	function searchGBBooksByISBN($isbn) {
+		$subject = $this -> getCleanedCriteria($isbn);
+		$results = $this -> service -> volumes -> listVolumes('isbn:' . $isbn, $this -> fields);
+		$values_ = $results['items'];
+
+		$books= $this -> getBooksFromResult($values_);
+
+		return $books;
+	}
+
 	/**
 	 * Esta função faz a pesquisa pelo titulo do livro
 	 * @param $titulo, o titulo do livro ou parte dele
@@ -263,7 +273,7 @@ class GestorLibros {
 	 *
 	 */
 	function searchBooksByDescription($subject) {
- $livros=array();
+		$livros=array();
 		if ($this -> maxResults > 0) {
 
 			$extrabooks = $this -> searchGBBooksByDescription($subject);
@@ -311,7 +321,7 @@ class GestorLibros {
 	 */
 	function searchBooksByAllCriteria($all) {
 		//echo "o criterio é".$isbn;
- $livros=array();
+		$livros=array();
 
 		if ($this -> maxResults > 0) {
 
@@ -350,21 +360,22 @@ class GestorLibros {
 
 			$authors = $value['volumeInfo']['authors'];
 			//echo var_dump($value);
-            if(count($authors)>0){
-			foreach ($authors as $author) {
-                $au=new Autor();
-                $au->nome=$author;
-				$book -> addAutor($au);
+			if(count($authors)>0){
+				foreach ($authors as $author) {
+					$au=new Autor();
+					$au->nome=$author;
+					$book -> addAutor($au);
+				}
 			}
-			}
-			$book -> idgb=($value['id']);
-			$book -> paginas=($value['volumeInfo']['pageCount']);
-			//$book -> setEditora($value['volumeInfo']['publisher']);
-			//$book -> setLinkPrevio($value['volumeInfo']['previewLink']);
-			$book -> ano=($value['volumeInfo']['publishedDate']);
-			$book -> descricao=($value['volumeInfo']['description']);
+			$book->idgb = ($value['id']);
+			$book->paginas = ($value['volumeInfo']['pageCount']);
+			$book->editora = ($value['volumeInfo']['publisher']);
+
+			$book->linkPrevio = ($value['volumeInfo']['previewLink']);
+			$book->ano = ($value['volumeInfo']['publishedDate']);
+			$book->descricao = ($value['volumeInfo']['description']);
 			if(isset($value['volumeInfo']['industryIdentifiers'])){
-			$book -> isbn=($value['volumeInfo']['industryIdentifiers'][0]['identifier']);
+				$book->isbn = ($value['volumeInfo']['industryIdentifiers'][0]['identifier']);
 			}
 			$book -> imagemurl=($value['volumeInfo']['imageLinks']['thumbnail']);
 			array_push($books, $book);
@@ -377,18 +388,17 @@ class GestorLibros {
 	 * Transforma uma cadena com espaços a uma cadena com os %20% correspondentes, para evitar erros  na solicitude Ex: olá mundo => olá%20%mundo
 	 */
 	function getCleanedCriteria($criteria) {
-		$criteria = str_replace(" ", "%20", $criteria);
-		return $criteria;
+		return urlencode($criteria);
 	}
 
 
-function getBooksToFeed($user,$ini=0,$quan=10){
+	function getBooksToFeed($user,$ini=0,$quan=10){
 
-			$this->maxResults=$quan;
-			$this->startIndex=$ini;
-            $this->updateFilters();
+		$this->maxResults=$quan;
+		$this->startIndex=$ini;
+		$this->updateFilters();
 
-            $livros=array();
+		$livros=array();
 
 		////echo count($livros);
 		//echo " this max results ".$this->maxResults;
@@ -405,53 +415,53 @@ function getBooksToFeed($user,$ini=0,$quan=10){
 		//echo count($livros);
 
 		return $livros;
-}
+	}
 
-function cadastrarLivro($livro){
+	function cadastrarLivro($livro){
 
-        if(!$livro){
-            return false;
-        }
+		if(!$livro){
+			return false;
+		}
 
 
 
-        $data=array("isbn"=>$livro->isbn,"idgb"=>$livro->idgb,"titulo"=>$livro->titulo,
-        "descricao"=>$livro->descricao,"ano"=>$livro->ano,"paginas"=>$livro->paginas,
-        "imagemurl"=>$livro->imagemurl,"created_at"=>$livro->created_at,"updated_at"=>$livro->updated_at);
-        $id= Livro::insertGetId($data);
-        $livro->id=$id;
+		$data=array("isbn"=>$livro->isbn,"idgb"=>$livro->idgb,"titulo"=>$livro->titulo,
+			"descricao"=>$livro->descricao,"ano"=>$livro->ano,"paginas"=>$livro->paginas,
+			"imagemurl"=>$livro->imagemurl,"created_at"=>$livro->created_at,"updated_at"=>$livro->updated_at);
+		$id= Livro::insertGetId($data);
+		$livro->id=$id;
 
-         $livro = Livro::where('id', $livro->id)->first();
+		$livro = Livro::where('id', $livro->id)->first();
 
-        return $livro;
+		return $livro;
 
-}
+	}
 
-function cadastrarAutoresLivro($autores,$livro){
-           //$autores//=$livro->getAutores();
-           $au=array();
-           foreach($autores as $autor){
-           echo "nome ".$autor;
-               if( !Autor::where('nome', '=', $autor)->exists()){
-                $a= new Autor();
-                $a->nome=$autor;
-                $a->save();
-                $a= Autor::where('nome', '=', $autor)->first();
+	function cadastrarAutoresLivro($autores,$livro){
+		//$autores//=$livro->getAutores();
+		$au=array();
+		foreach($autores as $autor){
+			echo "nome ".$autor;
+			if( !Autor::where('nome', '=', $autor)->exists()){
+				$a= new Autor();
+				$a->nome=$autor;
+				$a->save();
+				$a= Autor::where('nome', '=', $autor)->first();
 
-                    if(!LivroAutor::where('autor_id', '=', $a->id)
-                    ->where('livro_id', '=', $livro->id)->exists()){
+				if(!LivroAutor::where('autor_id', '=', $a->id)
+					->where('livro_id', '=', $livro->id)->exists()){
 
-                        $la=new LivroAutor();
-                        $la->autor_id=$a->id;
-                        $la->livro_id=$livro->id;
-                        $la->save();
+					$la=new LivroAutor();
+					$la->autor_id=$a->id;
+					$la->livro_id=$livro->id;
+					$la->save();
 
-                    }
-                }
-           }
-    return true;
+				}
+			}
+		}
+		return true;
 
-  }
+	}
 
 
 

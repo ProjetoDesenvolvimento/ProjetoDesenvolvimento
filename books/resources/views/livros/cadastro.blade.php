@@ -12,20 +12,19 @@
 			.posibilidad_item:hover{
 				cursor: hand;
 			}
+            .row-fluid:hover{
+                background-color: #2779AA;
+                color: #FFF;
+            }
 		</style>
 
 <iframe style="display: none" name="framePost"></iframe>
-    <script src="<?php echo asset('js/script_paginas/script_cadastro_livros.js')?>"></script>
     {!! Form::open(array('action' => 'LivroController@store', 'method'=> 'post')) !!}
     <div class="col-md-8" id="mutant">
         <input type="hidden" id="id" value="una" name="idgb">
         <div class="form-group">
             <label for="isbn" class="control-label">ISBN:</label>
-            {!! Form::text('isbn', '', array('id' => 'isbn',
-            'name'=>'isbn','class' => 'form-control', 'required'=>'required', 'type'=>'text')); !!}
-
             <div id="isbn-select" class=" form-control">
-
             </div>
         </div>
 
@@ -55,7 +54,7 @@
         </div>
         <div class="form-group">
             <label for="imagemurl" class="control-label">Imagem:</label>
-            {!! Form::text('imagemurl', '', array('id' => 'imagemurl', 'name'=>'imageurl', 'class' => 'form-control', 'type'=>'text')); !!}
+            {!! Form::text('imagemurl', '', array('id' => 'imagemurl', 'name'=>'imagemurl', 'class' => 'form-control', 'type'=>'text')); !!}
         </div>
 
         <fieldset>
@@ -107,30 +106,30 @@
             function repoFormatResult(book) {
                 var markup = '<div class="row-fluid">' +
                     '<div style="width: 100%;">' +
-                    '<div style="float:left;"><img src="' + book.volumeInfo.imageLinks.smallThumbnail + '" /></div>' +
-                    '<div><span class="span6">' + book.volumeInfo.title + '</span></div>' +
-                    '<div><span class="span6">' + book.volumeInfo.description + '</span></div>' +
-                    '</div>' +
-                    '<div style="clear:both;"></div>';
+                    '<div style="float:left;margin-right: 10px;"><img style="width: 80px;" src="' + book.smallThumbnail + '" /></div>' +
+                    '<div><span style="font-weight: bold;" class="span6">' + book.title + '</span></div>' +
+                    '<div><span class="span6">' + book.isbn + '</span></div>';
+
 
                 if (book.description) {
-                    markup += '<div>' + book.description + '</div>';
+                    markup += '<div style="font-size: 10px;">' + book.description + '</div>';
                 }
-
-                markup += '</div></div>';
+                markup += '</div>' +
+                    '<div style="clear:both;"></div>';
 
                 return markup;
             }
 
             function repoFormatSelection(book) {
-                return book.volumeInfo.title;
+                return book.title;
             }
 
             $("#isbn-select").select2({
-                placeholder: "Informe algo do livro",
+                placeholder: "Informe o isbn do Livro",
                 minimumInputLength: 2,
+                containerCssClass: "dropdown",
                 ajax: {
-                    url: 'https://www.googleapis.com/books/v1/volumes',
+                    url: '/request/ajax/asinc/livros/getlivros/isbn/',
                     dataType: 'json',
                     delay: 250,
 
@@ -146,24 +145,21 @@
                     },
                     cache: true
                 },
-                initSelection: function(element, callback) {
-                    // the input tag has a value attribute preloaded that points to a preselected repository's id
-                    // this function resolves that id attribute to an object that select2 can render
-                    // using its formatResult renderer - that way the repository name is shown preselected
-                    var id = $(element).val();
-                    if (id !== "") {
-                        $.ajax("https://www.googleapis.com/books/v1/volumes/" + id, {
-                            dataType: "json"
-                        }).done(function(data) { callback(data); });
-                    }
-                },
                 escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
                 formatResult: repoFormatResult, // omitted for brevity, see the source of this page
                 formatSelection: repoFormatSelection, // omitted for brevity, see the source of this page
                 dropdownCssClass: "bigdrop"
             });
-
-
+            $('#isbn-select').on("select2-selecting", function(e) {
+                // what you would like to happen
+                console.log(e.choice)
+                $("[name=titulo]").val(e.choice.text);
+                $("[name=descricao]").val(e.choice.description);
+                $("[name=ano]").val(e.choice.year);
+                $("[name=paginas]").val(e.choice.countPages);
+                $("[name=link]").val(e.choice.link);
+                $("[name=imagemurl]").val(e.choice.smallThumbnail);
+            });
         });
     </script>
 @stop
