@@ -50,7 +50,6 @@ class UsuarioController extends Controller
         $usuario->email = $request->get("email");
         $usuario->senha = $request->get("senha");
         $res = $usuario->save();
-
         return "<script>parent.resultStore('$res')</script>";
 
     }

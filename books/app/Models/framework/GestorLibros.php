@@ -441,7 +441,7 @@ class GestorLibros {
 		//$autores//=$livro->getAutores();
 		$au=array();
 		foreach($autores as $autor){
-			echo "nome ".$autor;
+			//echo "nome ".$autor;
 			if( !Autor::where('nome', '=', $autor)->exists()){
 				$a= new Autor();
 				$a->nome=$autor;

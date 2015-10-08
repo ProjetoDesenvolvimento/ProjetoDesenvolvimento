@@ -11,11 +11,21 @@
 |
 */
 
+// Authentication routes...
+Route::get('auth/login', 'AuthController@getLogin');
+Route::post('auth/login', 'AuthController@postLogin');
+Route::get('auth/logout', 'AuthController@getLogout');
+
+// Registration routes...
+Route::get('auth/register', 'AuthController@getRegister');
+Route::post('auth/register', 'AuthController@postRegister');
+
 
 Route::get('/', 'MainController@index');
 
-Route::resource('livro', 'LivroController');
 Route::resource('usuario', 'UsuarioController');
+Route::controller('troca', 'TrocaController');
+Route::controller('livro', 'LivroController');
 
 //Route::get('/livros/cadastro','LivrosController@cadastro');
 //Route::post('/livros/cadastroliv','LivrosController@cadastrarlivro');

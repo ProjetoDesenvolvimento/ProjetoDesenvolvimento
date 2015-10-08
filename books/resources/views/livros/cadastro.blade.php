@@ -20,10 +20,12 @@
 
 <iframe style="display: none" name="framePost"></iframe>
     {!! Form::open(array('action' => 'LivroController@store', 'method'=> 'post')) !!}
-    <div class="col-md-8" id="mutant">
+    <div class="col-md-6" id="mutant">
         <input type="hidden" id="id" value="una" name="idgb">
         <div class="form-group">
-            <label for="isbn" class="control-label">ISBN:</label>
+            <label for="isbn-select" class="control-label">ISBN:</label>
+            {!! Form::hidden('idgb', '', array('id' => 'idgb', 'class' => 'form-control', 'name'=>'idgb', 'required'=>'required')); !!}
+            {!! Form::hidden('isbn', '', array('id' => 'isbn', 'class' => 'form-control', 'name'=>'isbn', 'required'=>'required')); !!}
             <div id="isbn-select" class=" form-control">
             </div>
         </div>
@@ -56,49 +58,30 @@
             <label for="imagemurl" class="control-label">Imagem:</label>
             {!! Form::text('imagemurl', '', array('id' => 'imagemurl', 'name'=>'imagemurl', 'class' => 'form-control', 'type'=>'text')); !!}
         </div>
-
-        <fieldset>
+        <div class="form-group">
             <legend>
                 Autores
             </legend>
             <div id="autorescontainer">
 
             </div>
-        </fieldset>
-        <select name="estadolivro">
-            <option value="1">Bom</option>
-            <option value="2">Mais ou menos</option>
-            <option value="3">Ruim</option>
-
-        </select>
-        <input type="button" id="agregarau" name="" value="Agregar Autor">
-    </div>
-		<div id="posibilidadescontainer">
-			<fieldset>
-				<legend>
-					Libros con un parecido son las posibilidades listo
-				</legend>
-
-				<div id="posibilidades">
-					<div id="containerajaxresp" >
-						<div id="posibilidad">
-							<img src="7" />
-							<span class="book_title">Titulo libro aqui va </span>
-							<span class="book_isbn">ISBN aquí</span>
-							<span class="book_description">Una descripcion rapida de esta cuestiòn aqui</span>
-							<span class="book_publication">2015</span>
-							<span class="book_moreinfo"><a href="">Aquí</a></span>
-							<hr>
-						</div>
-
-					</div>
-				</div>
-			</fieldset>
-
-		</div>
-    <input type="submit" value="Cadastrar">
-    <input name="_token" type="hidden" value="<?php echo csrf_token() ?>"/>
-    <div id="results"></div>
+        </div>
+        <div class="form-group" >
+            <div class="col-md-3">
+            <select name="estadolivro">
+                <option value="1">Bom</option>
+                <option value="2">Mais ou menos</option>
+                <option value="3">Ruim</option>
+            </select>
+            </div>
+            <div class="col-md-3">
+                <input type="button" id="agregarau" class="form-control" name="" value="Agregar Autor">
+            </div>
+        </div>
+        <div class="form-group">
+            <input class="form-control" type="submit" value="Cadastrar">
+        </div>
+        <input name="_token" type="hidden" value="<?php echo csrf_token() ?>"/>
 {!! Form::close() !!}
     <script>
         $(document).ready(function(){
@@ -152,7 +135,8 @@
             });
             $('#isbn-select').on("select2-selecting", function(e) {
                 // what you would like to happen
-                console.log(e.choice)
+                $("[name=idgb]").val(e.choice.idgb);
+                $("[name=isbn]").val(e.choice.id);
                 $("[name=titulo]").val(e.choice.text);
                 $("[name=descricao]").val(e.choice.description);
                 $("[name=ano]").val(e.choice.year);
@@ -160,6 +144,8 @@
                 $("[name=link]").val(e.choice.link);
                 $("[name=imagemurl]").val(e.choice.smallThumbnail);
             });
+
+            $("[name=estadolivro]").select2();
         });
     </script>
 @stop

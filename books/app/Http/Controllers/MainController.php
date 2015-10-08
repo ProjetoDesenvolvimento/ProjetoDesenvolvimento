@@ -13,7 +13,7 @@ class MainController extends Controller
     }
 
     public function index() {
-        return view("main.index");
+        return view("main.index")->with("user", session()->get("user_data"));
     }
 
 }

@@ -48,6 +48,15 @@ class LivroController extends Controller
         return view("livros.cadastro");
     }
 
+    public function getShow() {
+        $user = session("user_data");
+
+        $livros = LivroUsuario::join("livro","livro.id","=","livrousuario.livro_id")
+            ->where("usuario_id", "=", $user["id"])->get();
+
+        return view("livros.show",["livros"=> $livros]);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -69,43 +78,41 @@ class LivroController extends Controller
 
         return $livro;
     }
+
     public function store(Request $request)
     {
 
         $gestor=new GestorLibros();
         $livro = DB::table('livro')->select('id', 'isbn','idgb','titulo','descricao','ano','paginas','imagemurl')
-            ->where('idgb', $request->get("idgb", "nada2"))->first();
+            ->where('isbn', "=", $request->get("isbn"))->first();
         if(!$livro){   //si no existe el livro
-            //  echo "entreee para livro <br>";//.var_dump($request);;
-
             $livro=$this->getBookFromRequest($request);
-
             $autores=$request->get("autores");
             $gestor->cadastrarLivro($livro);
-            $gestor->cadastrarAutoresLivro($autores,$livro);//AUTORES LIVROS CADASTRO
-            //  echo "<hr>".var_dump($livro)."<hr> con el id de ".$livro->id;
-
+            if (!empty($autores)) {
+                $gestor->cadastrarAutoresLivro($autores, $livro);//AUTORES LIVROS CADASTRO
+            }
         }
-
-        $user=Usuario::where('email','=','chescojavier')->first();
+        $user_data = session()->get("user_data");
+        $user_email = $user_data["email"];
+        $user_id = $user_data["id"];
+        $user = Usuario::where("id","=",$user_id)->first();
         if(!$user){
 
-            $user=new Usuario();
-            $user->email="chescojavier";
-            $user->id=1;
+            $user = new Usuario();
+            $user->email = $user_email;
+            $user->id = $user_id;
         }
-        //  echo  var_dump($livro);
-        // $gestor->cadastrarUsuarioLivro($user,$livro);
-        if(!LivroUsuario::where('usuario_id', '=', $user->id)->where('livro_id', '=', $livro->id)->exists()){
 
-            $lu=new LivroUsuario();
-            $lu->usuario_id=1;
+        if(!LivroUsuario::where('usuario_id', '=', $user->id)->where('livro_id', '=', $livro->id)->exists()){
+            $lu = new LivroUsuario();
+            $lu->usuario_id=$user_data["id"];
             $lu->livro_id=$livro->id;
-            //  echo $lu->livro_id.$livro->id;
-            $lu->estado=$request->get("estadolivro");;
+            $lu->estado=$request->get("estadolivro");
             $lu->save();
 
         }else{
+
             //  echo "el usuario ya lo tiene";
         }
         return View::make('livros.cadastrolivrosuceso', array('livro' => $livro));
@@ -166,17 +173,15 @@ class LivroController extends Controller
 
         $livrosarray=array();
         switch ($type) {
-            case 'isbn' :
+            case 'isbn':
                 $criteria_="isbn";
                 break;
 
-            case 'title' :
-
+            case 'title':
                 $criteria_="titulo";
                 break;
 
-            case 'description' :
-
+            case 'description':
                 $criteria_="descricao";
                 break;
 
@@ -195,49 +200,43 @@ class LivroController extends Controller
         }
         if($nlivros<10){
             //echo "menos de diez".$nlivros;
-            $nlivros=10-$nlivros;
+            $nlivros = 10 - $nlivros;
 
             $gestor = new GestorLibros();
-
+            $livrosGB = array();
             switch ($type) {
                 case 'isbn' :
-                    //	echo "finnn";
-                    $libros = $gestor -> searchBooksByISBN($data);
-                    $crieteria="isbn";
-
+                    $livrosGB = $gestor->searchBooksByISBN($data);
+                    $crieteria = "isbn";
                     break;
-
                 case 'title' :
-                    $libros = $gestor -> searchBooksByTitle($data);
-                    $criteria="titulo";
+                    $livrosGB = $gestor->searchBooksByTitle($data);
+                    $criteria = "titulo";
                     break;
-
                 case 'description' :
-                    $libros = $gestor -> searchBooksByDescription($data);
-                    $criteria="descricao";
+                    $livrosGB = $gestor->searchBooksByDescription($data);
+                    $criteria = "descricao";
                     break;
                 case 'year' :
-                    $libros = $gestor -> searchBooksByAllCriteria($data);
+                    $livrosGB = $gestor->searchBooksByAllCriteria($data);
                     break;
-
-
                 case 'feed':
-                    $user=new User();
+                    $user = new User();
                     $user->setIdusuario('');
-                    $libros = $gestor -> getBooksToFeed($user,$ini,$quan);
+                    $livrosGB = $gestor->getBooksToFeed($user, $ini, $quan);
                     break;
-
                 default :
                     break;
             }
-
+            $livrosarray = array_merge($livrosarray, $livrosGB);
         }
-        //  echo var_dump($libros);
+
         $arr = array();
         $arr["items"] = array();
-        foreach ($libros as $livro) {
+        foreach ($livrosarray as $livro) {
             $arr["items"][] = array(
                 "id"=>$livro->isbn,
+                "idgb"=>$livro->idgb,
                 "text"=>$livro->titulo,
                 "title"=>$livro->titulo,
                 "isbn"=> $livro->isbn,
@@ -245,6 +244,7 @@ class LivroController extends Controller
                 "year"=>$livro->ano,
                 "countPages"=>$livro->paginas,
                 "link"=>$livro->linkPrevio,
+                "authors"=>$livro->autores,
                 "smallThumbnail"=>$livro->imagemurl);
         }
 

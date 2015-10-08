@@ -13,9 +13,21 @@ class TrocaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function getIndex()
     {
         //
+        echo "a";
+    }
+
+    /**
+     * Formulario de view do usuário
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getTrocaLivroForm() {
+        echo "aqui";
+        echo  print_r(session()->get('user'),true);
     }
 
     /**
