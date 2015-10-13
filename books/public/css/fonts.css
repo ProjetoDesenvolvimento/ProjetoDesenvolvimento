@@ -1,6 +1,6 @@
-@import url("../fonts/roboto/Roboto-Black.ttf");
-@import url("../fonts/roboto/Roboto-BlackItalic.ttf");
-@import url("../fonts/roboto/Roboto-Bold.ttf");
-@import url("../fonts/roboto/Roboto-Italic.ttf");
-@import url("../fonts/roboto/Roboto-Light.ttf");
-@import url("../fonts/roboto/Roboto-Regular.ttf");
+@font-face {url("../fonts/roboto/Roboto-Black.ttf");}
+@font-face {url("../fonts/roboto/Roboto-BlackItalic.ttf");}
+@font-face {url("../fonts/roboto/Roboto-Bold.ttf");}
+@font-face {url("../fonts/roboto/Roboto-Italic.ttf");}
+@font-face {url("../fonts/roboto/Roboto-Light.ttf");}
+@font-face {url("../fonts/roboto/Roboto-Regular.ttf");}

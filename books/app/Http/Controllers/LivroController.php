@@ -48,13 +48,29 @@ class LivroController extends Controller
         return view("livros.cadastro");
     }
 
-    public function getShow() {
+    public function getMyBooks() {
         $user = session("user_data");
 
         $livros = LivroUsuario::join("livro","livro.id","=","livrousuario.livro_id")
             ->where("usuario_id", "=", $user["id"])->get();
 
         return view("livros.show",["livros"=> $livros]);
+    }
+
+    public function getShow() {
+        $user = session("user_data");
+        $livros = LivroUsuario::select("livro.*", "usuario.id as usuario_id", "usuario.nome as usuario_nome")
+            ->join("livro","livro.id", "=", "livrousuario.livro_id")
+            ->join("usuario", "usuario.id","=","livrousuario.usuario_id")
+            ->where("livrousuario.usuario_id", "!=", $user["id"])->get();
+        //select l.id,l.titulo, usuario.id from livrousuario join livro l ON l.id = livrousuario.livro_id join usuario ON usuario.id = livrousuario.usuario_id where usuario.id != 7
+
+        return view("livros.show",["livros"=> $livros]);
+
+    }
+
+    public function getTrocar() {
+        return view("livros.trocar")->with("livros", array('a','b','c'));
     }
 
     /**
@@ -72,7 +88,7 @@ class LivroController extends Controller
         $livro->descricao = $request->get("descricao");
         $livro->ano = $request->get("ano");
         $livro->paginas = $request->get("paginas");
-        $livro->imagemurl = $request->get("imageurl","#");
+        $livro->imagemurl = $request->get("imagemurl","#");
         $livro->created_at=date('Y-m-d G:i:s');
         $livro->updated_at=date('Y-m-d G:i:s');
 
@@ -170,6 +186,14 @@ class LivroController extends Controller
         $quan = isset($quan) ? $quan : 10;//quantidade, limit
 
         $criteria = $data = $request->get("q");
+
+
+        if (is_numeric($criteria) && strlen($criteria) > 3){
+            $type = "isbn";
+        }else{
+            $type = "title";
+        }
+
 
         $livrosarray=array();
         switch ($type) {
