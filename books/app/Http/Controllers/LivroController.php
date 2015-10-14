@@ -4,17 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
+use Auth;
 use DB;
 use App\Livro;
-use App\Autor;
+
 use App\Usuario;
-use App\LivroAutor;
+
 use App\LivroUsuario;
 use Illuminate\Support\Facades\Session;
-use PhpParser\Node\Expr\PostDec;
+
 use App\Models\framework\GestorLibros;
-use Symfony\Component\Console\Input\Input;
+
 use View;
 //use App\Models\Livro;
 
@@ -39,33 +39,61 @@ class LivroController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Mostra o formulario para cadastrar um novo livro.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function getCreate()
     {
         return view("livros.cadastro");
     }
 
     public function getMyBooks() {
-        $user = session("user_data");
+        $user = Auth::user();
 
         $livros = LivroUsuario::join("livro","livro.id","=","livrousuario.livro_id")
-            ->where("usuario_id", "=", $user["id"])->get();
+            ->where("usuario_id", "=", $user->id)->get();
 
         return view("livros.show",["livros"=> $livros]);
     }
 
+    /**
+     * Lista os livros cadastrados e disponiveis para troca
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function getShow() {
-        $user = session("user_data");
-        $livros = LivroUsuario::select("livro.*", "usuario.id as usuario_id", "usuario.nome as usuario_nome")
+        $user = Auth::user();
+        $livros = LivroUsuario::select(DB::Raw('count(livro.id) as total, livro.*'))
             ->join("livro","livro.id", "=", "livrousuario.livro_id")
             ->join("usuario", "usuario.id","=","livrousuario.usuario_id")
-            ->where("livrousuario.usuario_id", "!=", $user["id"])->get();
+            ->where("livrousuario.usuario_id", "!=", $user->id)
+            ->groupby("livro.id")
+            ->get();
         //select l.id,l.titulo, usuario.id from livrousuario join livro l ON l.id = livrousuario.livro_id join usuario ON usuario.id = livrousuario.usuario_id where usuario.id != 7
 
         return view("livros.show",["livros"=> $livros]);
+
+    }
+
+
+
+    /**
+     * Lista os livros cadastrados e disponiveis para troca
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getShowBookByUser($id) {
+        $user = Auth::user();
+        $livros = LivroUsuario::select('livro.*', 'usuario.id as usuario_id', 'usuario.nome as usuario_nome')
+            ->join("livro","livro.id", "=", "livrousuario.livro_id")
+            ->join("usuario", "usuario.id","=","livrousuario.usuario_id")
+            ->where("livrousuario.livro_id", "=", $id)
+            ->where("usuario.id","!=", $user->id)
+            ->get();
+        //select l.id,l.titulo, usuario.id from livrousuario join livro l ON l.id = livrousuario.livro_id join usuario ON usuario.id = livrousuario.usuario_id where usuario.id != 7
+
+        return view("livros.showByUser",["livros"=> $livros]);
 
     }
 
@@ -85,6 +113,7 @@ class LivroController extends Controller
         $livro->isbn=$request->get("isbn");
         $livro->idgb=$request->get("idgb", "nada2");
         $livro->titulo = $request->get("titulo");
+        $livro->titulosearch = strtoupper($request->get("titulo"));
         $livro->descricao = $request->get("descricao");
         $livro->ano = $request->get("ano");
         $livro->paginas = $request->get("paginas");
@@ -109,31 +138,33 @@ class LivroController extends Controller
                 $gestor->cadastrarAutoresLivro($autores, $livro);//AUTORES LIVROS CADASTRO
             }
         }
-        $user_data = session()->get("user_data");
-        $user_email = $user_data["email"];
-        $user_id = $user_data["id"];
-        $user = Usuario::where("id","=",$user_id)->first();
-        if(!$user){
-
-            $user = new Usuario();
-            $user->email = $user_email;
-            $user->id = $user_id;
-        }
-
-        if(!LivroUsuario::where('usuario_id', '=', $user->id)->where('livro_id', '=', $livro->id)->exists()){
+        $user_id = Auth::user()->id;
+        if(!LivroUsuario::where('usuario_id', '=', $user_id)->where('livro_id', '=', $livro->id)->exists()){
             $lu = new LivroUsuario();
-            $lu->usuario_id=$user_data["id"];
+            $lu->usuario_id=$user_id;
             $lu->livro_id=$livro->id;
             $lu->estado=$request->get("estadolivro");
             $lu->save();
 
         }else{
-
             //  echo "el usuario ya lo tiene";
         }
         return View::make('livros.cadastrolivrosuceso', array('livro' => $livro));
     }
 
+
+    public function getSolicitarTroca($book_id, $owner_id) {
+
+        $user = Auth::user();
+        $livro = LivroUsuario::select('livro.*', 'usuario.id as usuario_id', 'usuario.nome as usuario_nome')
+            ->join("livro","livro.id", "=", "livrousuario.livro_id")
+            ->join("usuario", "usuario.id","=","livrousuario.usuario_id")
+            ->where("livrousuario.livro_id", "=", $book_id)
+            ->where("livrousuario.usuario_id","=", $owner_id)
+            ->where("usuario.id","!=", $user->id)
+            ->first();
+        return view("livros.solicitar", ['result'=>$livro]);
+    }
 
     public function cadastrarLivroUsuario(Request $request)
     {
@@ -202,7 +233,7 @@ class LivroController extends Controller
                 break;
 
             case 'title':
-                $criteria_="titulo";
+                $criteria_="titulosearch";
                 break;
 
             case 'description':
@@ -213,7 +244,7 @@ class LivroController extends Controller
                 $criteria_="idgb";
                 break;
         }
-        $livros=Livro::where($criteria_, 'LIKE', '%'.$criteria.'%')->take(10)->get();
+        $livros=Livro::where($criteria_, 'LIKE', '%'.strtoupper($criteria).'%')->take(10)->get();
 
         $nlivros=count($livros);
 
@@ -268,7 +299,8 @@ class LivroController extends Controller
                 "year"=>$livro->ano,
                 "countPages"=>$livro->paginas,
                 "link"=>$livro->linkPrevio,
-                "authors"=>$livro->autores,
+                "authors"=>$livro->getAutores(),
+                "publisher"=>$livro->editora,
                 "smallThumbnail"=>$livro->imagemurl);
         }
 
@@ -284,7 +316,7 @@ class LivroController extends Controller
         $gestor = new GestorLibros();
         $livrosarray=array();
         $livros=Livro::select('id', 'isbn','idgb',
-            'titulo','descricao','ano','paginas','imagemurl')->skip($startindex*$limit)->take($limit)->get();
+            'titulo','descricao','ano','paginas',' ')->skip($startindex*$limit)->take($limit)->get();
         foreach($livros as $liv){
             echo "<br>el id  es ".$liv->id." </br>";
             array_push($livrosarray,$liv);

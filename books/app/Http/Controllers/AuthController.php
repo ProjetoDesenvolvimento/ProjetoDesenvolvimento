@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Usuario;
+use Auth;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
@@ -14,7 +15,18 @@ class AuthController extends Controller
         return view("auth.login");
     }
 
-    public function postLogin(Request $request) {
+    public function postLogin(Request $request)
+    {
+        $email = $request->get("email");
+        $password = $request->get("senha");
+        if (Auth::attempt(['email' => $email, 'password' => $password]))
+        {
+            return redirect()->intended('/');
+        }
+        return redirect()->intended('login');
+    }
+
+    public function postLogin2(Request $request) {
         $email = $request->get("email");
         $senha = $request->get("senha");
         if (empty($email) ||  empty($senha)){
@@ -34,4 +46,20 @@ class AuthController extends Controller
 
         return Redirect::to('/');
     }
+
+    /**
+     * Create a new user instance after a valid registration.
+     *
+     * @param  array  $data
+     * @return User
+     */
+    protected function create(array $data)
+    {
+        return Usuario::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => bcrypt($data['password']),
+        ]);
+    }
+
 }

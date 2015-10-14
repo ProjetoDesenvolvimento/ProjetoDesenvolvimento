@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid" >
         <div class="navbar-header">
             <button type="button" class="navbar-toggle" data-toggle="collapse"
@@ -9,7 +9,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a style="width: 250px;" class="navbar-brand" href="#">
+            <a style="width: 250px;" class="navbar-brand" href="/">
                 <img src="{{ asset('images/logo.svg') }}" />
 
             </a>
@@ -18,11 +18,11 @@
             <ul class="nav navbar-nav navbar-right">
                 <li><a href="#">galeria</a></li>
                 <li class="navbar-link-separator">|</li>
-                <li><a href="#">doar livro</a></li>
+                <li><a href="/livro/create">doar livro</a></li>
                 <li class="navbar-link-separator">|</li>
                 <li><a href="#">sobre nós</a></li>
                 <li class="navbar-link-separator">|</li>
-                <li><a href="/auth/login">login</a></li>
+                <li><a href="{{asset('login')}}">{{ Auth::check() ? Auth::user()->nome : "login" }}</a></li>
             </ul>
         </div>
     </div>

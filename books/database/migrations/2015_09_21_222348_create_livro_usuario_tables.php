@@ -37,6 +37,8 @@ class CreateLivroUsuarioTables extends Migration
             $table->unique('isbn');
             $table->string('idgb');
             $table->unique('idgb');
+            $table->text('titulosearch');
+            $table->index('titulosearch');
             $table->text('titulo');
             $table->index('titulo');
             $table->text('descricao');
@@ -114,6 +116,7 @@ class CreateLivroUsuarioTables extends Migration
             $table->string('nome',80);
             $table->string('email',80);
             $table->string('senha',80);
+            $table->string('remember_token', 255);
             $table->timestamps();
         });
 

@@ -8,18 +8,18 @@ class Livro extends Model
 {
     //
     protected $table = 'livro';
-   var  $autors=array();
+    var  $authors=array();
 
-   function setAutores($autors){
-    $this->autors=$autors;
-   }
+    function setAutores($autors){
+        $this->authors=$autors;
+    }
 
-   function addAutor($autor){
-    array_push($this->autors,$autor);
-   }
+    function addAutor($autor){
+        array_push($this->authors,$autor);
+    }
 
     function getAutores(){
-        return $this->autors;
+        return $this->authors;
     }
 
 }

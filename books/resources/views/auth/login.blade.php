@@ -1,7 +1,6 @@
 @extends('layouts.master')
 
 @section('content')
-
 <!-- resources/views/auth/login.blade.php -->
 <div class="container">
     <div class="row">

@@ -1,11 +1,12 @@
-
-.navbar {
-    margin-bottom:0 !important;
-}
 .navbar-default ul > li > a {
     font-size: 15px;
     font-weight: 500;
 
+}
+
+.jumbotron {
+    padding-top: 115px !important;
+    background-color: transparent !important;
 }
 
 @media (max-width: 767px) {

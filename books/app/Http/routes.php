@@ -12,9 +12,9 @@
 */
 
 // Authentication routes...
-Route::get('auth/login', 'AuthController@getLogin');
-Route::post('auth/login', 'AuthController@postLogin');
-Route::get('auth/logout', 'AuthController@getLogout');
+Route::get('login', 'AuthController@getLogin');
+Route::post('login', 'AuthController@postLogin');
+Route::get('logout', 'AuthController@getLogout');
 
 // Registration routes...
 Route::get('auth/register', 'AuthController@getRegister');
@@ -23,9 +23,13 @@ Route::post('auth/register', 'AuthController@postRegister');
 
 Route::get('/', 'MainController@index');
 
-Route::resource('usuario', 'UsuarioController');
-Route::controller('troca', 'TrocaController');
-Route::controller('livro', 'LivroController');
+Route::group(array('middleware'=>'auth'), function(){
+
+    Route::resource('usuario', 'UsuarioController');
+    Route::controller('troca', 'TrocaController');
+    Route::controller('livro', 'LivroController');
+});
+
 
 //Route::get('/livros/cadastro','LivrosController@cadastro');
 //Route::post('/livros/cadastroliv','LivrosController@cadastrarlivro');
@@ -33,7 +37,7 @@ Route::post('/livros/cadastroliv','LivroController@store');
 
 Route::get('/livros/tenho/{idgb}/{id}','LivroController@tenho');
 
-Route::get('/livros/create','LivroController@create');
+//Route::get('/livros/create','LivroController@create');
 Route::get('/livros','LivroController@obterfeed');
 Route::post('/livros/tenho/id/{id}/idgb/{idgb}','LivroController@cadastrarLivroUsuario');
 

@@ -40,6 +40,9 @@ class GestorLibros {
 	 */
 	function __construct() {
 		$client = new Google_Client();
+		$client->setApplicationName("Troca-livro");
+		$client->setDeveloperKey("AIzaSyDsrOtruI3COBhB-7pxm5MlO55W-DyaJu8");
+
 		$service1 = new Google_Service_Books($client);
 		$this -> service = $service1;
 		$this -> maxResults = 5;
@@ -359,7 +362,7 @@ class GestorLibros {
 			$book -> titulo=$value['volumeInfo']['title'];
 
 			$authors = $value['volumeInfo']['authors'];
-			//echo var_dump($value);
+
 			if(count($authors)>0){
 				foreach ($authors as $author) {
 					$au=new Autor();

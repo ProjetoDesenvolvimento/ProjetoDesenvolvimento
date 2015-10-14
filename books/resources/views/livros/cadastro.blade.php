@@ -87,10 +87,15 @@
         $(document).ready(function(){
 
             function repoFormatResult(book) {
+                var author = "Nao encontrado";
+                if (book.authors.length > 0)
+                    author = book.authors[0].nome;
                 var markup = '<div class="row-fluid">' +
                     '<div style="width: 100%;">' +
                     '<div style="float:left;margin-right: 10px;"><img style="width: 80px;" src="' + book.smallThumbnail + '" /></div>' +
                     '<div><span style="font-weight: bold;" class="span6">' + book.title + '</span></div>' +
+
+                    '<div><span class="span6">' + author + '</span></div>';
                     '<div><span class="span6">' + book.isbn + '</span></div>';
 
 
@@ -114,7 +119,7 @@
                 ajax: {
                     url: '/request/ajax/asinc/livros/getlivros/isbn/',
                     dataType: 'json',
-                    delay: 250,
+                    delay: 1000,
 
                     data: function (term, page) {
                         return {
@@ -143,6 +148,7 @@
                 $("[name=paginas]").val(e.choice.countPages);
                 $("[name=link]").val(e.choice.link);
                 $("[name=imagemurl]").val(e.choice.smallThumbnail);
+                $("[name=editora]").val(e.choice.publisher);
             });
 
             $("[name=estadolivro]").select2();

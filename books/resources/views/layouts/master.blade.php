@@ -22,16 +22,11 @@
       -->
   </head>
   <body>
-    <div class="container-fluid">
-        <div class="row">
-            @include('layouts.header')
+
+        @include('layouts.header')
+        <div class="jumbotron">
+        @yield('content')
         </div>
-        <div>
-            @yield('content')
-        </div>
-        <div class="row">
-            @include('layouts.footer')
-        </div>
-    </div>
+        @include('layouts.footer')
   </body>
 </html>
