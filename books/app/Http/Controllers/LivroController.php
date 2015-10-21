@@ -63,13 +63,18 @@ class LivroController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getShow() {
-        $user = Auth::user();
+        if (Auth::check()){
+            $user = Auth::user();
+        }
+
         $livros = LivroUsuario::select(DB::Raw('count(livro.id) as total, livro.*'))
             ->join("livro","livro.id", "=", "livrousuario.livro_id")
-            ->join("usuario", "usuario.id","=","livrousuario.usuario_id")
-            ->where("livrousuario.usuario_id", "!=", $user->id)
-            ->groupby("livro.id")
-            ->get();
+            ->join("usuario", "usuario.id","=","livrousuario.usuario_id");
+
+        if (isset($user))
+            $livros->where("livrousuario.usuario_id", "!=", $user->id);
+
+        $livros = $livros->groupby("livro.id")->get();
         //select l.id,l.titulo, usuario.id from livrousuario join livro l ON l.id = livrousuario.livro_id join usuario ON usuario.id = livrousuario.usuario_id where usuario.id != 7
 
         return view("livros.show",["livros"=> $livros]);
