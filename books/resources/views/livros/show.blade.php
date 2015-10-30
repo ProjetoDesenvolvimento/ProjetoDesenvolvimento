@@ -10,7 +10,7 @@
 
         <div class="thumbnail">
             <h4 class=" text-center group inner list-group-item-heading">
-                {{$livro->titulo}}</h4>
+                {{$livro->titulo}} <span class="badge">{{$livro->total}}</span></h4>
             <img class="group list-group-image" src="{{$livro->imagemurl}}" alt="" />
             <div class="caption">
 
@@ -21,9 +21,6 @@
                 </div>
 
             </div>
-
-                <p class=" text-center">
-                    estoque: {{$livro->total}}</p>
 
         </div>
 

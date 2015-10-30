@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Troca;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Auth;
@@ -69,7 +70,8 @@ class LivroController extends Controller
 
         $livros = LivroUsuario::select(DB::Raw('count(livro.id) as total, livro.*'))
             ->join("livro","livro.id", "=", "livrousuario.livro_id")
-            ->join("usuario", "usuario.id","=","livrousuario.usuario_id");
+            ->join("usuario", "usuario.id","=","livrousuario.usuario_id")
+            ->where("livrousuario.estado","<", "3");
 
         if (isset($user))
             $livros->where("livrousuario.usuario_id", "!=", $user->id);
@@ -90,11 +92,12 @@ class LivroController extends Controller
      */
     public function getShowBookByUser($id) {
         $user = Auth::user();
-        $livros = LivroUsuario::select('livro.*', 'usuario.id as usuario_id', 'usuario.nome as usuario_nome')
+        $livros = LivroUsuario::select('livro.*', 'livrousuario.id as livrousuario_id', 'usuario.nome as usuario_nome')
             ->join("livro","livro.id", "=", "livrousuario.livro_id")
             ->join("usuario", "usuario.id","=","livrousuario.usuario_id")
             ->where("livrousuario.livro_id", "=", $id)
             ->where("usuario.id","!=", $user->id)
+            ->where("livrousuario.estado","<", "3")
             ->get();
         //select l.id,l.titulo, usuario.id from livrousuario join livro l ON l.id = livrousuario.livro_id join usuario ON usuario.id = livrousuario.usuario_id where usuario.id != 7
 
@@ -158,17 +161,26 @@ class LivroController extends Controller
     }
 
 
-    public function getSolicitarTroca($book_id, $owner_id) {
-
-        $user = Auth::user();
-        $livro = LivroUsuario::select('livro.*', 'usuario.id as usuario_id', 'usuario.nome as usuario_nome')
+    public function getSolicitarTroca($book_id) {
+        $livro = LivroUsuario::select('livro.*', 'livrousuario.id as livrousuario_id', 'usuario.id as usuario_id', 'usuario.nome as usuario_nome')
             ->join("livro","livro.id", "=", "livrousuario.livro_id")
             ->join("usuario", "usuario.id","=","livrousuario.usuario_id")
-            ->where("livrousuario.livro_id", "=", $book_id)
-            ->where("livrousuario.usuario_id","=", $owner_id)
-            ->where("usuario.id","!=", $user->id)
+            ->where("livrousuario.id", "=", $book_id)
             ->first();
         return view("livros.solicitar", ['result'=>$livro]);
+    }
+
+    public function getSolicitarTrocaUsuario($book_id) {
+        $troca = Troca::where('livrousuario_id','=', $book_id)->whereAnd('usuario_id', '=', Auth::user()->id);
+        if (!$troca->exists()) {
+            $troca = new Troca();
+            $troca->livrousuario_id = $book_id;
+            $troca->usuario_id = Auth::user()->id;
+            $troca->estado = 0;
+            $troca->save();
+        }else{
+            echo "ja existe";
+        }
     }
 
     public function cadastrarLivroUsuario(Request $request)
@@ -321,7 +333,7 @@ class LivroController extends Controller
         $gestor = new GestorLibros();
         $livrosarray=array();
         $livros=Livro::select('id', 'isbn','idgb',
-            'titulo','descricao','ano','paginas',' ')->skip($startindex*$limit)->take($limit)->get();
+            'titulo','descricao','ano','paginas')->skip($startindex*$limit)->take($limit)->get();
         foreach($livros as $liv){
             echo "<br>el id  es ".$liv->id." </br>";
             array_push($livrosarray,$liv);

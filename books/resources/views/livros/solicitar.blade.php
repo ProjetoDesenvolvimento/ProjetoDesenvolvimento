@@ -13,7 +13,7 @@
         <h3 >{{$result->titulo}}
 
         </h3>
-        <a class="btn btn-default">Solicitar!</a>
+        <a class="btn btn-default" href="{{asset('livro/solicitar-troca-usuario')}}/{{$result->livrousuario_id}}">Solicitar de {{$result->usuario_nome}}!</a>
         <h3>Descrição</h3>
 
         <p class="text-justify">{{$result->descricao}}</p>
