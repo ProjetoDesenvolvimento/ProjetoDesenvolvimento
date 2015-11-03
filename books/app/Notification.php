@@ -4,10 +4,10 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Autor extends Model
+class Notification extends Model
 {
     //
-    protected $table = 'autor';
+    protected $table = 'notification';
 
 
 

@@ -120,6 +120,15 @@ class CreateLivroUsuarioTables extends Migration
             $table->timestamps();
         });
 
+        Schema::create('notification', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('texto',1500);
+            $table->integer('tipo');
+            $table->string('emailorigen',80);
+            $table->string('emailobjeti',80);
+            $table->integer('estado');
+            $table->timestamps();
+        });
     }
 
     /**

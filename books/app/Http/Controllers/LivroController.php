@@ -71,7 +71,7 @@ class LivroController extends Controller
             ->groupby("livro.id")
             ->get();
         //select l.id,l.titulo, usuario.id from livrousuario join livro l ON l.id = livrousuario.livro_id join usuario ON usuario.id = livrousuario.usuario_id where usuario.id != 7
-
+//echo "auuiiiiiiiiiiiiiiiiiiii!°".var_dump($livros).$user->id;;
         return view("livros.show",["livros"=> $livros]);
 
     }
@@ -308,6 +308,99 @@ class LivroController extends Controller
     }
 
 
+    public function verdato2($type,$criteria){
+        $type = isset($type) ? $type : "isbn";
+        $data = isset($criteria) ? $criteria : "";
+        $ini = isset($ini) ? $ini : 0;//inicio, offset
+        $quan = isset($quan) ? $quan : 10;//quantidade, limit
+      //  echo $type.$data;
+
+        $livros=null;
+        $livrosarray=array();
+        $criteria_="";
+
+        //echo "datoos ".$type.$data;
+        switch ($type) {
+            case 'isbn' :
+                //	echo "finnn";
+
+                $criteria_="isbn";
+
+                break;
+
+            case 'title' :
+
+                $criteria_="titulo";
+                break;
+
+            case 'description' :
+
+                $criteria_="descricao";
+                break;
+
+            default :
+             $criteria_="idgb";
+                break;
+        }
+            $livros=Livro::where($criteria_, 'LIKE', '%'.$criteria.'%')->take(10)->get();
+
+            $nlivros=count($livros);
+
+    if($nlivros>0){
+        foreach($livros as $liv){
+            array_push($livrosarray,$liv);
+        }
+    }
+    if($nlivros<10){
+               // echo "menos de diez".$nlivros;
+                $nlivros=10-$nlivros;
+
+        $gestor = new GestorLibros();
+
+        switch ($type) {
+            case 'isbn' :
+                //	echo "finnn";
+                $libros = $gestor -> searchBooksByISBN($data);
+                $crieteria="isbn";
+
+                break;
+
+            case 'title' :
+                $libros = $gestor -> searchBooksByTitle($data);
+                $criteria="titulo";
+                break;
+
+            case 'description' :
+                $libros = $gestor -> searchBooksByDescription($data);
+                $criteria="descricao";
+                break;
+                    case 'year' :
+                $libros = $gestor -> searchBooksByAllCriteria($data);
+                break;
+
+
+            case 'feed':
+                $user=new User();
+                $user->setIdusuario('');
+                $libros = $gestor -> getBooksToFeed($user,$ini,$quan);
+                break;
+
+            default :
+                break;
+        }
+
+        }
+      //  echo var_dump($libros);
+        foreach ($libros as $livro) {
+            array_push($livrosarray,$livro);
+           // echo "agregando";
+        }
+
+        return View::make('livros.asinc_livrocadastro_posibilidades', array('livrosarray' => $livrosarray));
+
+    }
+
+
     public function obterfeed($startindex=0,$limit=10){
         //obter o usuario a partir da sessao
         $username=Session::get('user', function() { return 'chesco'; });
@@ -315,14 +408,15 @@ class LivroController extends Controller
         $user->email=$username;
         $gestor = new GestorLibros();
         $livrosarray=array();
-        $livros=Livro::select('id', 'isbn','idgb',
-            'titulo','descricao','ano','paginas',' ')->skip($startindex*$limit)->take($limit)->get();
+        //echo $startindex;
+        $livros=Livro::select('id', 'isbn','idgb','imagemurl',
+            'titulo','descricao','ano','paginas')->skip($startindex*$limit)->take($limit)->get();
         foreach($livros as $liv){
-            echo "<br>el id  es ".$liv->id." </br>";
+           //echo "<br>el id  es ".$liv->id." </br>";
             array_push($livrosarray,$liv);
         }
 
-        $livros = $gestor ->getBooksToFeed($user,$startindex,$limit);
+        $livros = $gestor ->getBooksToFeed($user,$startindex*$limit,$limit);
 
         foreach($livros as $liv){
             array_push($livrosarray,$liv);
@@ -336,7 +430,7 @@ class LivroController extends Controller
 
     public function tenho($idgb="",$id=0)
     {
-        echo "el ide es ".$id;
+       // echo "el ide es ".$id;
         //$id = $request->input("id");
         $gestor = new GestorLibros();
         $livro = Livro::where("id","=",$id)->orWhere("idgb","=",$idgb)->select('id', 'isbn','idgb',

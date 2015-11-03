@@ -31,5 +31,5 @@
 
 
     @endforeach
-
+</div>
 @stop
