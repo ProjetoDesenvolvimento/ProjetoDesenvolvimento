@@ -441,6 +441,7 @@ class LivroController extends Controller
                 $livro->titulo = substr ($livro->titulo,0,25) . '...';
             }
             array_push($livrosArray,$livro);
+
         }
 
         $livrosGB = $gestor->getBooksToFeed($startIndex*$limit,$limit-count($livrosArray));
