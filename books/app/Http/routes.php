@@ -41,12 +41,22 @@ Route::group(array('middleware'=>'auth'), function(){
 //Route::post('/livros/cadastroliv','LivrosController@cadastrarlivro');
 Route::post('/livros/cadastroliv','LivroController@store');
 
-Route::get('/livros/tenho/{idgb}/{id}','LivroController@tenho');
+//Route::get('/livros/tenho','LivroController@tenho');
 
 //Route::get('/livros/create','LivroController@create');
-Route::get('/livros','LivroController@obterfeed');
-Route::post('/livros/tenho/id/{id}/idgb/{idgb}','LivroController@cadastrarLivroUsuario');
+// Route::get('/livros','LivroController@obterfeed');
+//Route::post('/livros/tenho/id/{id}/idgb/{idgb}','LivroController@cadastrarLivroUsuario');
 
 Route::get('/request/ajax/asinc/livros/getlivros/{type}', ['as' => 'verdato', 'uses' => 'LivroController@verdato']);
-Route::get('/livros/feed','LivroController@obterfeed');
-Route::get('/livros/feed/pag/{index}', ['as' => 'obterfeed', 'uses' => 'LivroController@obterfeed']);
+Route::get('/request/ajax/asinc/livros/getlivros/type/{type}/criteria/{criteria}', ['as' => 'verdato', 'uses' => 'LivroController@verdato2']);//a peesquica no formulario
+//Route::get('/livros/feed','LivroController@obterfeed');
+//Route::get('/livros/feed/{startindex}', ['as' => 'feed', 'uses' => 'LivroController@feed']);
+
+
+
+//notifications
+Route::get('/user/notifications','NotificationsController@getUserNotifications');
+Route::get('/user/last_notifications','NotificationsController@getUserLastNotifications');
+
+
+

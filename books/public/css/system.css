@@ -17,11 +17,20 @@ input[type="text"]:focus,
     height: 450px;
    
 }
+.cover-img {
+    width: 100%;
+}
+.top-buffer{
+    margin-top: 15px;
+}
+
+.navbar-default{
+    box-shadow: 0 10px 10px #ccc;
+}
 
 .navbar-default ul > li > a {
     font-size: 15px;
     font-weight: 500;
-
 }
 
 .jumbotron {
@@ -85,13 +94,22 @@ img {
 .tl-footer{
     min-height: 100px;
     background-color: #465955;
+    bottom: -78px;
+    position:relative;
 }
 .tl-item h4 {
     height: 70px;
+    font-weight: normal;
 }
 
 .tl-item img {
     height: 230px;
+}
+
+.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
 }
 
 @media (max-width: 767px) {

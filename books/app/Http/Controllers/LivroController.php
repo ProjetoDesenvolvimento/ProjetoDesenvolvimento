@@ -78,7 +78,7 @@ class LivroController extends Controller
 
         $livros = $livros->groupby("livro.id")->get();
         //select l.id,l.titulo, usuario.id from livrousuario join livro l ON l.id = livrousuario.livro_id join usuario ON usuario.id = livrousuario.usuario_id where usuario.id != 7
-
+//echo "auuiiiiiiiiiiiiiiiiiiii!°".var_dump($livros).$user->id;;
         return view("livros.show",["livros"=> $livros]);
 
     }
@@ -90,7 +90,11 @@ class LivroController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function getShowBookByUser($id) {
+    public function getShowBookByUser($id=0) {
+        if (empty($id)) {
+            echo "Livro não cadastrado";
+            return;
+        }
         $user = Auth::user();
         $livros = LivroUsuario::select('livro.*', 'livrousuario.id as livrousuario_id', 'usuario.nome as usuario_nome')
             ->join("livro","livro.id", "=", "livrousuario.livro_id")
@@ -183,45 +187,38 @@ class LivroController extends Controller
         }
     }
 
+    public function postTenho(Request $request) {
+        return $this->cadastrarLivroUsuario($request);
+    }
+
     public function cadastrarLivroUsuario(Request $request)
     {
-
-
         $gestor=new GestorLibros();
         $livro = DB::table('livro')->select('id', 'isbn','idgb','titulo','descricao','ano','paginas','imagemurl')
             ->where('idgb', $request->get("idgb", "nada2"))->first();
         if(!$livro){   //si no existe el livro
             //  echo "entreee para livro <br>";//.var_dump($request);;
 
-            $livro=$this->getBookFromRequest($request);
+            $livro = $this->getBookFromRequest($request);
 
             $autores=$request->get("autores");
             $gestor->cadastrarLivro($livro);
             $gestor->cadastrarAutoresLivro($autores,$livro);//AUTORES LIVROS CADASTRO
-            //  echo "<hr>".var_dump($livro)."<hr> con el id de ".$livro->id;
 
         }
+        $user = Auth::user();
 
-        $user=Usuario::where('email','=','chescojavier')->first();
-        if(!$user){
-
-            $user=new Usuario();
-            $user->email="chescojavier";
-            $user->id=1;
-        }
-        //  echo  var_dump($livro);
-        // $gestor->cadastrarUsuarioLivro($user,$livro);
         if(!LivroUsuario::where('usuario_id', '=', $user->id)->where('livro_id', '=', $livro->id)->exists()){
 
             $lu=new LivroUsuario();
-            $lu->usuario_id=1;
+            $lu->usuario_id=$user->id;
             $lu->livro_id=$livro->id;
-            //  echo $lu->livro_id.$livro->id;
             $lu->estado=$request->get("estadolivro");;
             $lu->save();
 
         }else{
             //  echo "el usuario ya lo tiene";
+            echo "Já possui o livro";
         }
 
         return View::make('livros.cadastrolusuccess', array('livro' => $livro));
@@ -295,7 +292,7 @@ class LivroController extends Controller
                 case 'feed':
                     $user = new User();
                     $user->setIdusuario('');
-                    $livrosGB = $gestor->getBooksToFeed($user, $ini, $quan);
+                    $livrosGB = $gestor->getBooksToFeed($ini, $quan);
                     break;
                 default :
                     break;
@@ -325,40 +322,147 @@ class LivroController extends Controller
     }
 
 
-    public function obterfeed($startindex=0,$limit=10){
-        //obter o usuario a partir da sessao
-        $username=Session::get('user', function() { return 'chesco'; });
-        $user=new Usuario();
-        $user->email=$username;
-        $gestor = new GestorLibros();
+    public function verdato2($type,$criteria){
+        $type = isset($type) ? $type : "isbn";
+        $data = isset($criteria) ? $criteria : "";
+        $ini = isset($ini) ? $ini : 0;//inicio, offset
+        $quan = isset($quan) ? $quan : 10;//quantidade, limit
+      //  echo $type.$data;
+
+        $livros=null;
         $livrosarray=array();
-        $livros=Livro::select('id', 'isbn','idgb',
-            'titulo','descricao','ano','paginas')->skip($startindex*$limit)->take($limit)->get();
+        $criteria_="";
+
+        //echo "datoos ".$type.$data;
+        switch ($type) {
+            case 'isbn' :
+                //	echo "finnn";
+
+                $criteria_="isbn";
+
+                break;
+
+            case 'title' :
+
+                $criteria_="titulo";
+                break;
+
+            case 'description' :
+
+                $criteria_="descricao";
+                break;
+
+            default :
+             $criteria_="idgb";
+                break;
+        }
+            $livros=Livro::where($criteria_, 'LIKE', '%'.$criteria.'%')->take(10)->get();
+
+            $nlivros=count($livros);
+
+    if($nlivros>0){
         foreach($livros as $liv){
-            echo "<br>el id  es ".$liv->id." </br>";
             array_push($livrosarray,$liv);
         }
+    }
+    if($nlivros<10){
+               // echo "menos de diez".$nlivros;
+                $nlivros=10-$nlivros;
 
-        $livros = $gestor ->getBooksToFeed($user,$startindex,$limit);
+        $gestor = new GestorLibros();
 
-        foreach($livros as $liv){
-            array_push($livrosarray,$liv);
+        switch ($type) {
+            case 'isbn' :
+                //	echo "finnn";
+                $libros = $gestor -> searchBooksByISBN($data);
+                $crieteria="isbn";
+
+                break;
+
+            case 'title' :
+                $libros = $gestor -> searchBooksByTitle($data);
+                $criteria="titulo";
+                break;
+
+            case 'description' :
+                $libros = $gestor -> searchBooksByDescription($data);
+                $criteria="descricao";
+                break;
+                    case 'year' :
+                $libros = $gestor -> searchBooksByAllCriteria($data);
+                break;
+
+
+            case 'feed':
+                $user=new User();
+                $user->setIdusuario('');
+                $libros = $gestor -> getBooksToFeed($ini,$quan);
+                break;
+
+            default :
+                break;
+        }
+
+        }
+
+        foreach ($libros as $livro) {
+            array_push($livrosarray,$livro);
+        }
+
+        return View::make('livros.asinc_livrocadastro_posibilidades', array('livrosarray' => $livrosarray));
+    }
+
+
+    public function getFeed($startIndex=0,$limit=12){
+
+
+
+        if (Auth::check()){
+            $user = Auth::user();
+        }
+
+        $livros = LivroUsuario::select(DB::Raw('count(livro.id) as total, livro.*'))
+            ->join("livro","livro.id", "=", "livrousuario.livro_id")
+            ->join("usuario", "usuario.id","=","livrousuario.usuario_id")
+            ->where("livrousuario.estado","<", "3");
+
+        if (isset($user))
+            $livros->where("livrousuario.usuario_id", "!=", $user->id);
+
+        $livrosSGBD = $livros->groupby("livro.id")->skip($startIndex*$limit)->take($limit)->get();
+
+
+        $gestor = new GestorLibros();
+        $livrosArray=array();
+
+        foreach($livrosSGBD as $livro){
+            // Se o tamanho do titulo for maior que 25 corta
+            if (strlen($livro->titulo) > 25){
+                $livro->titulo = substr ($livro->titulo,0,25) . '...';
+            }
+            array_push($livrosArray,$livro);
+        }
+
+        $livrosGB = $gestor->getBooksToFeed($startIndex*$limit,$limit-count($livrosArray));
+
+        foreach($livrosGB as $livro){
+            array_push($livrosArray,$livro);
         }
 
 
         return View::make('livros.feed',
-            array('livrosresult' => $livrosarray,'start'=>$startindex,'limit'=>$limit));
+            array('livrosresult' => $livrosArray,'start'=>$startIndex,'limit'=>$limit));
 
     }
 
-    public function tenho($idgb="",$id=0)
+    public function getTenho($idgb, $book_id=0)
     {
-        echo "el ide es ".$id;
-        //$id = $request->input("id");
         $gestor = new GestorLibros();
-        $livro = Livro::where("id","=",$id)->orWhere("idgb","=",$idgb)->select('id', 'isbn','idgb',
-            'titulo','descricao','ano','paginas','imagemurl')->first();
-        if(!$livro){
+        if (empty($book_id)) {
+            $livro = Livro::where("id", "=", $book_id)->select('id', 'isbn', 'idgb',
+                'titulo', 'descricao', 'ano', 'paginas', 'imagemurl')->first();
+        }
+        if(!isset($livro) || empty($livro)){
             $gestor -> maxResults=1;
             $gestor ->updateFilters();
             $livros=$gestor->searchGBBooksById($idgb);
@@ -366,6 +470,8 @@ class LivroController extends Controller
                 $livro=$livros[0];
             }
         }
+
+
         return View::make('livros.tenho', array('livro' => $livro));
     }
 }

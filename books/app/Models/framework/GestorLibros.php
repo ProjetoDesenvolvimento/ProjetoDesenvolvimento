@@ -395,7 +395,7 @@ class GestorLibros {
 	}
 
 
-	function getBooksToFeed($user,$ini=0,$quan=10){
+	function getBooksToFeed($ini=0,$quan=10){
 
 		$this->maxResults=$quan;
 		$this->startIndex=$ini;
@@ -407,7 +407,7 @@ class GestorLibros {
 		//echo " this max results ".$this->maxResults;
 		if ($this -> maxResults > 0) {
 			if(!isset($thisautor)){
-				$thisautor="Jhon";//obter el autor com mais livros
+				$thisautor="book";//obter el autor com mais livros
 			}
 			$extrabooks = $this -> searchGBBooksByAllCriteria($thisautor);
 			//echo "quantidade ".count($extrabooks);

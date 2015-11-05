@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redirect;
+use Config;
 
 class AuthController extends Controller
 {
@@ -16,14 +17,20 @@ class AuthController extends Controller
     }
 
     public function postLogin(Request $request)
-    {
+    {//file:///var/www/html/trocalivro/books/app/Http/Controllers/Auth/AuthController.php
+
         $email = $request->get("email");
         $password = $request->get("senha");
         if (Auth::attempt(['email' => $email, 'password' => $password]))
         {
+         session()->put("usuariologeado","SIM" );
+
             return redirect()->intended('/');
         }
+       // return redirect()->intended('/');
+       session()->put("usuariologeado","nao" );
         return redirect()->intended('login');
+       //echo "fatal".$email,$password;//bcrypt($password);
     }
 
     public function postLogin2(Request $request) {
@@ -33,8 +40,8 @@ class AuthController extends Controller
             Redirect::to('auth/login')->with('message', 'Login Failed');
         }
 
-        $usuario = Usuario::whereRaw('email = ? and senha = ?',[$email, $senha])->first();
-
+        $usuario = Usuario::whereRaw('email = ? and password = ?',[$email, $senha])->first();
+        echo $email.$senha;
         if(!$usuario){
             Route::redirect("auth/login");
         }

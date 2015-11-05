@@ -28,6 +28,18 @@
         <div class="jumbotron">
         @yield('content')
         </div>
+
+
+
+
+      <?php if(session()->get("usuariologeado" )=="SIM"):?>
+            @include('layouts.notifications');
+      <?php endif;?>
+
+
+
+
         @include('layouts.footer')
+
   </body>
 </html>
