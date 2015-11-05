@@ -10,20 +10,17 @@
 
         <div class="thumbnail">
             <h4 class=" text-center group inner list-group-item-heading">
-                {{$livro->titulo}}</h4>
+                {{$livro->titulo}} <span class="badge">{{$livro->total}}</span></h4>
             <img class="group list-group-image" src="{{$livro->imagemurl}}" alt="" />
             <div class="caption">
 
                 <div class="row">
                     <div class="col-xs-12 col-md-12">
-                        <a style="width: 100%" class="btn btn-success" href="show-book-by-user/{{$livro->id}}">Quero</a>
+                        <a style="width: 100%" class="btn btn-success" href="{{asset('livro/show-book-by-user')}}/{{$livro->id}}">Quero</a>
                     </div>
                 </div>
 
             </div>
-
-                <p class=" text-center">
-                    estoque: {{$livro->total}}</p>
 
         </div>
 

@@ -23,12 +23,18 @@ Route::post('auth/register', 'AuthController@postRegister');
 
 Route::get('/', 'MainController@index');
 
+Route::get('/livro/show', 'LivroController@getShow');
+
 Route::group(array('middleware'=>'auth'), function(){
 
     Route::resource('usuario', 'UsuarioController');
     Route::controller('troca', 'TrocaController');
     Route::controller('livro', 'LivroController');
+
 });
+
+
+
 
 
 //Route::get('/livros/cadastro','LivrosController@cadastro');
