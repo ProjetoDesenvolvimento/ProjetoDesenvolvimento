@@ -31,7 +31,7 @@ class UsuarioController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function getCriar()
     {
         return view("usuario.create", array("title"=>"Cadastro"));
 
@@ -43,12 +43,12 @@ class UsuarioController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function postCriar(Request $request)
     {
         $usuario = new Usuario();
         $usuario->nome = $request->get("nome");
         $usuario->email = $request->get("email");
-        $usuario->senha = $request->get("senha");
+        $usuario->senha = bcrypt($request->get("senha"));
         $res = $usuario->save();
         return "<script>parent.resultStore('$res')</script>";
 

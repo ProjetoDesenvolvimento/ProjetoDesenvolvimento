@@ -16,13 +16,15 @@
         </div>
         <div id="navbar" class="collapse navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
+                <li><a href="{{asset('usuario/criar')}}">cadastro</a></li>
+                <li class="navbar-link-separator">|</li>
                 <li><a href="{{asset('livro/feed')}}">galeria</a></li>
                 <li class="navbar-link-separator">|</li>
                 <li><a href="/livro/create">doar livro</a></li>
                 <li class="navbar-link-separator">|</li>
                 <li><a href="#">sobre nós</a></li>
                 <li class="navbar-link-separator">|</li>
-                <li><a href="{{asset('login')}}">{{ Auth::check() ? Auth::user()->nome : "login" }}</a></li>
+                <li><a href="{{asset('login')}}">{{ Auth::check() ? Auth::user()->nome : "entrar" }}</a></li>
             </ul>
         </div>
     </div>
