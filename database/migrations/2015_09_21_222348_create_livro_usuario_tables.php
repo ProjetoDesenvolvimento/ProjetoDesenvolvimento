@@ -12,6 +12,48 @@ class CreateLivroUsuarioTables extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('autor'))
+        Schema::drop('autor');
+
+        if (Schema::hasTable('genero'))
+        Schema::drop('genero');
+
+        if (Schema::hasTable('livro'))
+        Schema::drop('livro');
+
+        if  (Schema::hasTable('livroautor'))
+        Schema::drop('livroautor');
+
+        if (Schema::hasTable('livrogenero'))
+        Schema::drop('livrogenero');
+
+        if (Schema::hasTable('livroeditora'))
+        Schema::drop('livroeditora');
+
+        if (Schema::hasTable('livrousuario'))
+        Schema::drop('livrousuario');
+
+        if (Schema::hasTable('editora'))
+        Schema::drop('editora');
+
+        if (Schema::hasTable('usuario'))
+        Schema::drop('usuario');
+
+        if (Schema::hasTable('troca'))
+        Schema::drop('troca');
+
+        if (Schema::hasTable('usuariotelefone'))
+        Schema::drop('usuariotelefone');
+
+        if (Schema::hasTable('telefone'))
+        Schema::drop('telefone');
+
+        if (Schema::hasTable('recomendacao'))
+        Schema::drop('recomendacao');
+
+        if (Schema::hasTable('notification'))
+        Schema::drop('notification');
+
         Schema::create('notification', function (Blueprint $table) {
             $table->increments('id');
             $table->string('texto',1500);
@@ -54,7 +96,7 @@ class CreateLivroUsuarioTables extends Migration
             $table->text('descricao');
             $table->string('ano');
             $table->integer('paginas');
-            $table->text('imagemurl')->default('');
+            $table->text('imagemurl');
             $table->timestamps();
         });
 
@@ -112,12 +154,22 @@ class CreateLivroUsuarioTables extends Migration
             $table->timestamps();
         });
 
-        Schema::create('troca', function (Blueprint $table) {
+        Schema::create('solicitacaotroca', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('livrousuario_id');
-            $table->integer('usuario_id');
-            $table->integer('estado');
+            $table->integer('usuario_solicitante');
+            $table->integer('usuario_proprietario');
             $table->unique(array('livrousuario_id','usuario_id'));
+            $table->timestamps();
+        });
+
+        Schema::create('troca', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('solicitacao_A');
+            $table->integer('solicitacao_B');
+            $table->index('solicitacao_A');
+            $table->index('solicitacao_B');
+            $table->unique(array('solicitacao_A','solicitacao_B'));
             $table->timestamps();
         });
 
@@ -129,8 +181,6 @@ class CreateLivroUsuarioTables extends Migration
             $table->string('remember_token', 255);
             $table->timestamps();
         });
-
-
     }
 
     /**
@@ -145,7 +195,14 @@ class CreateLivroUsuarioTables extends Migration
         Schema::drop('livro');
         Schema::drop('livroautor');
         Schema::drop('livrogenero');
+        Schema::drop('livroeditora');
+        Schema::drop('livrousuario');
         Schema::drop('editora');
-
+        Schema::drop('usuario');
+        Schema::drop('troca');
+        Schema::drop('usuariotelefone');
+        Schema::drop('telefone');
+        Schema::drop('recomendacao');
+        Schema::drop('notification');
     }
 }

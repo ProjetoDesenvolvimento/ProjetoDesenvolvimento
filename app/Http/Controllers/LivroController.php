@@ -183,8 +183,9 @@ class LivroController extends Controller
             $troca->estado = 0;
             $troca->save();
         }else{
-            echo "ja existe";
+            return view("livros.jaSolicitado");
         }
+        return view("livros.solicitado");
     }
 
     public function postTenho(Request $request) {
@@ -195,15 +196,13 @@ class LivroController extends Controller
     {
         $gestor=new GestorLibros();
         $livro = DB::table('livro')->select('id', 'isbn','idgb','titulo','descricao','ano','paginas','imagemurl')
-            ->where('idgb', $request->get("idgb", "nada2"))->first();
-        if(!$livro){   //si no existe el livro
-            //  echo "entreee para livro <br>";//.var_dump($request);;
-
+            ->where('idgb', $request->get("idgb", "cadastro-manual"))->first();
+        if(!$livro){
             $livro = $this->getBookFromRequest($request);
 
             $autores=$request->get("autores");
             $gestor->cadastrarLivro($livro);
-            $gestor->cadastrarAutoresLivro($autores,$livro);//AUTORES LIVROS CADASTRO
+            $gestor->cadastrarAutoresLivro($autores, $livro);//AUTORES LIVROS CADASTRO
 
         }
         $user = Auth::user();
@@ -217,7 +216,6 @@ class LivroController extends Controller
             $lu->save();
 
         }else{
-            //  echo "el usuario ya lo tiene";
             echo "Já possui o livro";
         }
 
