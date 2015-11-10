@@ -47,7 +47,7 @@
                             }
 
                          });
-                       // setTimeout(fadeNotificationsOut,5000);
+
                     });
 
                 }

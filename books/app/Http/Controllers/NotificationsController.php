@@ -7,6 +7,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Notification;
 use View;
+use Auth;
+use DB;
 class NotificationsController extends Controller
 {
     /**
@@ -27,10 +29,10 @@ class NotificationsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function getUserNotifications() {
-
+        $user = Auth::user();
         //tipo 1 notifications estado 1 é ativo
-        if(Notification::where('emailobjeti', '=', "una@una.com")->where('estado', '=', 1)->where('tipo', '=', 1)->exists()){
-            $notifications=Notification::where('emailobjeti', '=', "una@una.com")->where('estado', '=', 1)->where('tipo', '=', 1)->get();
+        if(Notification::where('emailobjeti', '=', $user->email)->where('estado', '=', 1)->where('tipo', '=', 1)->exists()){
+            $notifications=Notification::where('emailobjeti', '=', $user->email)->where('estado', '=', 1)->where('tipo', '=', 1)->get();
             return View::make('usuario.notifications.rendernotifications', array('notifications' => $notifications));
         }else{
             //echo "nao existo";
@@ -40,14 +42,24 @@ class NotificationsController extends Controller
 
     public function getUserLastNotifications() {
 
+         $user = Auth::user();
+         $usersname=array();
+         //echo var_dump($user);
         //tipo 1 notifications estado 1 é ativo
-        if(Notification::where('emailobjeti', '=', "una@una.com")->where('estado', '=', 1)->where('tipo', '=', 1)->exists()){
-            $notifications=Notification::where('emailobjeti', '=', "una@una.com")->where('estado', '=', 1)->where('tipo', '=', 1)->get();
+        if(Notification::where('emailobjeti', '=', $user->email)->where('estado', '=', 1)->exists()){
+            $notifications=Notification::where('emailobjeti', '=', $user->email)->where('estado', '=', 1)->get();
             foreach($notifications as $notif){
                 $notif->estado=2;
-                $notif->save();
+                $useraux=  DB::table('usuario')->select('nome')->where('email', "=", $notif->emailorigen)->first();
+                if($useraux){
+                    array_push($usersname,$useraux->nome);
+                }else{
+                       array_push($usersname,"DESCONOCIDO!");
+                }
+
+             //   $notif->save();
             }
-            return View::make('usuario.notifications.rendernotifications', array('notifications' => $notifications));
+            return View::make('usuario.notifications.rendernotifications', array('notifications' => $notifications,'users'=>$usersname));
         }else{
             //echo "nao existo";
         }
