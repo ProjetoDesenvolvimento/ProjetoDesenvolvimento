@@ -17,31 +17,22 @@
     <!-- Começa carousel -->
     <div id="carousel-t2" class="row carousel slide" data-ride="carousel">
       <!-- Indicators -->
+
       <ol class="carousel-indicators">
         <li data-target="#carousel-t2" data-slide-to="0" class="active"></li>
         <li data-target="#carousel-t2" data-slide-to="1"></li>
         <li data-target="#carousel-t2" data-slide-to="2"></li>
+        <li data-target="#carousel-t2" data-slide-to="3"></li>
+        <li data-target="#carousel-t2" data-slide-to="4"></li>
+        <li data-target="#carousel-t2" data-slide-to="5"></li>
+        <li data-target="#carousel-t2" data-slide-to="6"></li>
       </ol>
 
       <!-- Wrapper for slides -->
-      <div class="carousel-inner" role="listbox">
-        <div class="item active">
-          <div class="carousel-caption">
-            <h3>Teste 1</h3>
-          </div>
-        </div>
-        <div class="item">
-          <div class="carousel-caption">
-            <h3>Teste 2</h3>
-          </div>
-        </div>
-        <div class="item">
-          <div class="carousel-caption">
-            <h3>Teste 3</h3>
-          </div>
-        </div>
-      </div>
-
+      <fieldset>
+        <legend style="text-align:center">Livros em destaque</legend>
+        <div class="carousel-inner" id="slider_inneritemscontainer" role="listbox">    </div>
+      </fieldset>
       <!-- Controls -->
       <a class="left carousel-control" href="#carousel-t2" role="button" data-slide="prev">
         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
@@ -61,7 +52,88 @@
       <div><a href="livro/show">Mostra livros</a></div>
       <div><a href="livros/create">Cadastrar livro</a></div>
       <div><a href="livro/trocar">Trocar livro</a></div>
+      <div><a href="<?php echo action("LivroController@getDestacados");?>">Prueba</a></div>
 
-    </div> 
+    </div>
+<script>
 
+$(document).ready(function(){
+     //alert("entree");
+    getDestacados();
+
+});
+
+            function getDestacados(){
+            //alert("dentro de destacados");
+                     $.get( "http://localhost/trocalivro/public/livro/destacados", function(resp) {
+                   //  alert(resp);
+                         $("#slider_inneritemscontainer").html(resp);
+
+                    });
+
+            }
+
+</script>
+<style>
+
+.carousel-inner > .item > img,
+.carousel-inner > .item > a > img {
+
+    margin: auto;
+}
+
+a.carousel-control:hover {
+    color:#ffffff !important;
+}
+.item{
+	padding-left: 12%;
+}
+.slider_itemtext{
+	display: block;
+	width: 100%;
+	font-size: 1.2em;
+	text-align: center;
+
+
+}
+.slider_item_posibilidad{
+	box-shadow: 0 0 5px rgba(0,0,0,0.2);
+	margin: 20px;
+	margin-top:0px;
+	width: 25%;
+
+
+
+
+}
+
+.slider_item_posibilidad:hover .slider_posibilidaditem_options, .slider_item_posibilidad:hover .slider_item_cover{
+	display: block;
+}
+
+.slider_posibilidaditem_options{
+	position: absolute;
+	top: 40%;
+	left: 20%;
+	display: none;
+
+}
+
+.slider_item_cover{
+		position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,0.5);
+	display: none;
+}
+
+.slider_item_titulolibro{
+	display: block;
+	width: 100%;
+	text-align: center;
+	font-weight: 900;
+}
+</style>
 @stop
