@@ -65,7 +65,7 @@ $(document).ready(function(){
 
             function getDestacados(){
             //alert("dentro de destacados");
-                     $.get( "/trocalivro/public/livro/destacados", function(resp) {
+                     $.get( "/livro/destacados", function(resp) {
                    //  alert(resp);
                          $("#slider_inneritemscontainer").html(resp);
 
