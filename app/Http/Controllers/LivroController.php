@@ -109,6 +109,24 @@ class LivroController extends Controller
 
     }
 
+    public function getBooksByUser($idusuario=0) {
+        if (empty($idusuario)) {
+            echo "Usuario nao existe";
+            return;
+        }
+        $user = new Usuario();
+        $user->id=$idusuario;
+        $livros = LivroUsuario::select('livro.*', 'livrousuario.id as livrousuario_id', 'usuario.nome as usuario_nome')
+            ->join("livro","livro.id", "=", "livrousuario.livro_id")
+            ->join("usuario", "usuario.id","=","livrousuario.usuario_id")
+            ->where("usuario.id","!=", $user->id)
+            ->where("livrousuario.estado","<", "3")
+            ->get();
+        //select l.id,l.titulo, usuario.id from livrousuario join livro l ON l.id = livrousuario.livro_id join usuario ON usuario.id = livrousuario.usuario_id where usuario.id != 7
+
+        return view("livros.booksbyuser",["livros"=> $livros,"usuarionome"=>$user->id]);
+
+    }
     public function getTrocar() {
         return view("livros.trocar")->with("livros", array('a','b','c'));
     }

@@ -29,6 +29,9 @@
                 <li><a href="{{asset('login')}}">{{ Auth::check() ? Auth::user()->nome : "entrar" }}</a></li>
                 <?php if (Auth::check()) {?>
                 <li class="navbar-link-separator">|</li>
+                <?php   $linkmeus=action('LivroController@getBooksByUser',[Auth::user()->id]); ?>
+                <li><a href="{{$linkmeus}}">meus livros</a></li>
+                <li class="navbar-link-separator">|</li>
                 <li><a href="{{asset('logout')}}">sair</a></li>
                 <?php }?>
             </ul>

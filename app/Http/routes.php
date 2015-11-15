@@ -28,6 +28,8 @@ Route::get('/livro/destacados/{id}', 'LivroController@getDestacados');
 
 Route::get('/livro/feed/', 'LivroController@getFeed');
 Route::get('/livro/feed/{id}', 'LivroController@getFeed');
+Route::get('/livro/booksbyuser/{idusuario}', 'LivroController@getBooksByUser');
+
 
 Route::get('/usuario/criar', 'UsuarioController@getCriar');
 Route::post('/usuario/criar', 'UsuarioController@postCriar');
