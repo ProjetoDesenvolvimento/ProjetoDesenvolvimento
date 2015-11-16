@@ -54,7 +54,8 @@ class UsuarioController extends Controller
         $usuario->remember_token = "";
         $usuario->senha = bcrypt($request->get("senha"));
         $res = $usuario->save();
-        return "<script>parent.resultStore('$res')</script>";
+       // return "<script>parent.resultStore('$res')</script>";
+        return redirect()->intended('login');
 
     }
 
@@ -75,10 +76,11 @@ class UsuarioController extends Controller
         $usuario2 = Usuario::where('id', '=', $request->get("id"))->first();
         echo $request->get("senha")."esta essss";
         $senha= bcrypt($request->get("senha"));
-        var_dump($usuario2);
+        //var_dump($usuario2);
         $usuario2->senha =$senha;
         $usuario2->save();
-        return "completado";
+       // return "completado";
+        return redirect()->intended('login');
     }
 
     /**
