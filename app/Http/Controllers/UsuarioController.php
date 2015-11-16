@@ -6,7 +6,7 @@ use App\Usuario;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use App\Models\framework\GestorUsuarios;
 class UsuarioController extends Controller
 {
 
@@ -33,7 +33,10 @@ class UsuarioController extends Controller
      */
     public function getCriar()
     {
-        return view("usuario.create", array("title"=>"Cadastro"));
+        $gestor=new GestorUsuarios();
+        $linkurl=$gestor->getFacebookLoginURLforLogin();
+
+        return view("usuario.create", array("title"=>"Cadastro","loginUrl"=>$linkurl));
 
     }
 
@@ -51,8 +54,33 @@ class UsuarioController extends Controller
         $usuario->remember_token = "";
         $usuario->senha = bcrypt($request->get("senha"));
         $res = $usuario->save();
-        return "<script>parent.resultStore('$res')</script>";
+       // return "<script>parent.resultStore('$res')</script>";
+        return redirect()->intended('login');
 
+    }
+
+    public function criarUsuarioFromFacebook(){
+         $gestor=new GestorUsuarios();
+         $usuario=$gestor->criarUsuarioFromFacebook();
+         if($usuario!=null){
+            return view('usuario.resetpassword')->with('usuario', $usuario);
+         }else{
+
+         }
+
+    }
+
+    public function resetPassword(Request $request){
+
+        $usuario2=new Usuario();
+        $usuario2 = Usuario::where('id', '=', $request->get("id"))->first();
+        echo $request->get("senha")."esta essss";
+        $senha= bcrypt($request->get("senha"));
+        //var_dump($usuario2);
+        $usuario2->senha =$senha;
+        $usuario2->save();
+       // return "completado";
+        return redirect()->intended('login');
     }
 
     /**
