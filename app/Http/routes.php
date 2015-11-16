@@ -15,6 +15,8 @@
 Route::get('login', 'AuthController@getLogin');
 Route::post('login', 'AuthController@postLogin');
 Route::get('logout', 'AuthController@getLogout');
+Route::get('loginfb', 'AuthController@postLoginFromFacebook');
+
 
 // Registration routes...
 Route::get('auth/register', 'AuthController@getRegister');
@@ -31,6 +33,9 @@ Route::get('/livro/feed/{id}', 'LivroController@getFeed');
 Route::get('/livro/booksbyuser/{idusuario}', 'LivroController@getBooksByUser');
 
 
+Route::get('/usuario/criarffb', 'UsuarioController@criarUsuarioFromFacebook');
+
+Route::post('/usuario/resetpassword', 'UsuarioController@resetPassword');
 Route::get('/usuario/criar', 'UsuarioController@getCriar');
 Route::post('/usuario/criar', 'UsuarioController@postCriar');
 
