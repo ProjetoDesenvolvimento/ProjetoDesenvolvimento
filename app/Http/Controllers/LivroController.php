@@ -74,7 +74,7 @@ class LivroController extends Controller
             ->where("livrousuario.estado","<", "3");
 
         if (isset($user))
-            $livros->where("livrousuario.usuario_id", "!=", $user->id);
+            $livros->where("livrousuario.usuario_id", "=", $user->id);
 
         $livros = $livros->groupby("livro.id")->get();
         //select l.id,l.titulo, usuario.id from livrousuario join livro l ON l.id = livrousuario.livro_id join usuario ON usuario.id = livrousuario.usuario_id where usuario.id != 7
