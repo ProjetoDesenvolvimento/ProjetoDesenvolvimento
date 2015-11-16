@@ -22,14 +22,21 @@ Route::post('auth/register', 'AuthController@postRegister');
 
 Route::get('/', 'MainController@index');
 
+
+Route::get('/livro/destacados/', 'LivroController@getDestacados');
+Route::get('/livro/destacados/{id}', 'LivroController@getDestacados');
+
 Route::get('/livro/feed/', 'LivroController@getFeed');
 Route::get('/livro/feed/{id}', 'LivroController@getFeed');
+Route::get('/livro/booksbyuser/{idusuario}', 'LivroController@getBooksByUser');
+
+
 Route::get('/usuario/criar', 'UsuarioController@getCriar');
 Route::post('/usuario/criar', 'UsuarioController@postCriar');
 
 Route::group(array('middleware'=>'auth'), function(){
     Route::controller('troca', 'TrocaController');
-    Route::controller('livro', 'LivroController');
+    //Route::controller('livro', 'LivroController');
     Route::controller('usuario', 'UsuarioController');
 });
 

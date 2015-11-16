@@ -109,6 +109,24 @@ class LivroController extends Controller
 
     }
 
+    public function getBooksByUser($idusuario=0) {
+        if (empty($idusuario)) {
+            echo "Usuario nao existe";
+            return;
+        }
+        $user = new Usuario();
+        $user->id=$idusuario;
+        $livros = LivroUsuario::select('livro.*', 'livrousuario.id as livrousuario_id', 'usuario.nome as usuario_nome')
+            ->join("livro","livro.id", "=", "livrousuario.livro_id")
+            ->join("usuario", "usuario.id","=","livrousuario.usuario_id")
+            ->where("usuario.id","!=", $user->id)
+            ->where("livrousuario.estado","<", "3")
+            ->get();
+        //select l.id,l.titulo, usuario.id from livrousuario join livro l ON l.id = livrousuario.livro_id join usuario ON usuario.id = livrousuario.usuario_id where usuario.id != 7
+
+        return view("livros.booksbyuser",["livros"=> $livros,"usuarionome"=>$user->id]);
+
+    }
     public function getTrocar() {
         return view("livros.trocar")->with("livros", array('a','b','c'));
     }
@@ -470,5 +488,46 @@ class LivroController extends Controller
 
 
         return View::make('livros.tenho', array('livro' => $livro));
+    }
+
+    public function getDestacados($startIndex=0,$limit=20){
+        if (Auth::check()){
+            $user = Auth::user();
+        }
+
+        $livros = LivroUsuario::select(DB::Raw('count(livro.id) as total, livro.*'))
+            ->join("livro","livro.id", "=", "livrousuario.livro_id")
+            ->join("usuario", "usuario.id","=","livrousuario.usuario_id")
+            ->where("livrousuario.estado","<", "3");
+
+        if (isset($user))
+            $livros->where("livrousuario.usuario_id", "!=", $user->id);
+
+        $livrosSGBD = $livros->groupby("livro.id")->skip($startIndex*$limit)->take($limit)->get();
+
+        $livrosArray=array();
+
+        foreach($livrosSGBD as $livro){
+            // Se o tamanho do titulo for maior que 25 corta
+            if (strlen($livro->titulo) > 25){
+                $livro->titulo = substr ($livro->titulo,0,25) . '...';
+            }
+            array_push($livrosArray,$livro);
+
+        }
+
+        $gestor = new GestorLibros();
+        $livrosGB = $gestor->getBooksToFeed($startIndex*$limit,$limit-count($livrosArray));
+        foreach($livrosGB as $livro){
+            if (strlen($livro->titulo) > 25){
+                $livro->titulo = substr ($livro->titulo,0,25) . '...';
+            }
+            array_push($livrosArray, $livro);
+        }
+
+
+        return View::make('livros.destacados',
+            array('livrosresult' => $livrosArray,'start'=>$startIndex,'limit'=>$limit));
+
     }
 }
