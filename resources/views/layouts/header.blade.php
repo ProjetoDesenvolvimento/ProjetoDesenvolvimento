@@ -29,7 +29,6 @@
                 <?php if (!Auth::check()) {?>
                 <li><a href="{{asset('login')}}">entrar</a></li>
                 <?php }else{?>
-                    <li class="navbar-link-separator">|</li>
                     <?php   $linkmeus=action('LivroController@getMeusLivros',[Auth::user()->id]); ?>
                     <li><a href="{{$linkmeus}}">{{Auth::user()->nome}}</a></li>
                 <?php }?>
