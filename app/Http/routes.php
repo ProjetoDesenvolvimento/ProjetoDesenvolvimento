@@ -41,7 +41,7 @@ Route::post('/usuario/criar', 'UsuarioController@postCriar');
 
 Route::group(array('middleware'=>'auth'), function(){
     Route::controller('troca', 'TrocaController');
-    //Route::controller('livro', 'LivroController');
+    Route::controller('livro', 'LivroController');
     Route::controller('usuario', 'UsuarioController');
 });
 
