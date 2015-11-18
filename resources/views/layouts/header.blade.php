@@ -31,7 +31,7 @@
                 <?php }else{?>
                     <li class="navbar-link-separator">|</li>
                     <?php   $linkmeus=action('LivroController@getMeusLivros',[Auth::user()->id]); ?>
-                    <li><a href="{{$linkmeus}}"></a></li>
+                    <li><a href="{{$linkmeus}}">Auth::user()->nome</a></li>
                 <?php }?>
 
 
