@@ -165,8 +165,8 @@ class CreateLivroUsuarioTables extends Migration
 
         Schema::create('troca', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('solicitacao_A'); // ORIGEM
-            $table->integer('solicitacao_B'); // ACEITE
+            $table->integer('solicitacao_A')->default(""); // ORIGEM
+            $table->integer('solicitacao_B')->default(""); // ACEITE
             $table->integer('estado');
             $table->index('solicitacao_A');
             $table->index('solicitacao_B');

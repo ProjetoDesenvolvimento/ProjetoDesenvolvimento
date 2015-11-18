@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Notification;
 use App\Troca;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -196,10 +197,21 @@ class LivroController extends Controller
         $troca = Troca::where('livrousuario_id','=', $book_id)->whereAnd('usuario_id', '=', Auth::user()->id);
         if (!$troca->exists()) {
             $troca = new Troca();
-            $troca->livrousuario_id = $book_id;
-            $troca->usuario_id = Auth::user()->id;
+            $troca->solicitacao_A = $book_id;
             $troca->estado = 0;
             $troca->save();
+
+
+            $usuario = Usuario::where("id","=",LivroUsuario::where("livro_id","=",$book_id)->first()->usuario_id);
+
+            $notificacao = new Notification();
+            $notificacao->texto = "O usuário ".Auth::user()->nome." solicitou a troca de um livro seu.";
+            $notificacao->tipo = 2;
+            $notificacao->emailorigen =  Auth::user()->email;
+            $notificacao->emailobjeti = $usuario->email;
+            $notificacao->estado = 1;
+            $notificacao->save();
+
         }else{
             return view("livros.jaSolicitado");
         }
