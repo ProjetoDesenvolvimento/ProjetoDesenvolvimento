@@ -211,11 +211,20 @@ class LivroController extends Controller
     }
 
     public function getSolicitarTrocaUsuario($book_id) {
-        $troca = Troca::where('livrousuario_id','=', $book_id)->whereAnd('usuario_id', '=', Auth::user()->id);
-        if (!$troca->exists()) {
+        $livrosusuarioid= LivroUsuario::select("id")->where("usuario_id","=",Auth::user()->id)->get();
+        $arrayitemsid=array();
+        array_push($arrayitemsid,-1);
+        foreach($livrosusuarioid as $id){
+         array_push($arrayitemsid,$id[0]);
+        // echo "entreee  ";
+        }
+        $troca = Troca::where('solicitacao_A','=', $book_id)->whereIn('solicitacao_B',$arrayitemsid)->get();
+        //var_dump($troca);
+        if (!$troca||count($troca)==0) {
             $troca = new Troca();
             $troca->solicitacao_A = $book_id;
-            $troca->estado = 0;
+            $troca->idsolicitante = Auth::user()->id;
+            $troca->estado = 1;
             $troca->save();
 
 
@@ -224,11 +233,11 @@ class LivroController extends Controller
 
 
 
-            $usuario = Usuario::where("id","=",LivroUsuario::where("livro_id","=",$book_id)->first()->usuario_id);
-
+            $usuario = Usuario::where("id","=",LivroUsuario::where("id","=",$book_id)->first()->usuario_id)->first();
+           // var_dump($usuario);
             $notificacao = new Notification();
             $notificacao->texto = "O usuário ".Auth::user()->nome." solicitou a troca de um livro seu.";
-            $notificacao->tipo = 2;
+            $notificacao->tipo = 1;
             $notificacao->emailorigen =  Auth::user()->email;
             $notificacao->emailobjeti = $usuario->email;
             $notificacao->estado = 1;
@@ -238,7 +247,7 @@ class LivroController extends Controller
         }else{
             return view("livros.jaSolicitado");
         }
-        return view("livros.solicitado");
+        return view("livros.solicitado" );//fazer a view um pouco mas bonita
     }
 
     public function postTenho(Request $request) {

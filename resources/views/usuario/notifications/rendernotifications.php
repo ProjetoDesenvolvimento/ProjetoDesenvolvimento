@@ -2,18 +2,31 @@
 
     $respuesta="";
     $counter=0;
-    foreach($notifications as $notification){
+    foreach($notificationsresp as $notification){
 
         switch($notification->tipo){
             case 1:
                 $respuesta.="<div class='notification_container'>";
                 $respuesta.="   <div class='notification_container_inside'>";
-                $respuesta.="       <span class='notification_container_inside_title'><a href='' class='origin_emaillink'>".$users[$counter]."</a> esta interesado en un livro tuyo <span>";
+                $respuesta.="       <span class='notification_container_inside_title'><a href='' class='origin_emaillink'>".$notification["sourcedata"]."</a> esta interesado em seu livro <span>";
                 $respuesta.="           <hr>";
-                $respuesta.="       <div class='notification_container_inside_body'>".$notification->texto."</div>";
-                $respuesta.="       <div class='notification_container_inside_date'>Data: ".$notification->created_at."</div>";
-                $respuesta.="       <input class='notification_container_inside_id' type='hidden' value='".$notification->id."'>";
-                $respuesta.="       <input class='notification_container_inside_type' type='hidden' value='".$notification->tipo."'>";
+                $respuesta.="       <div class='notification_container_inside_body'>".$notification["object"]->texto."</div>";
+                $respuesta.="       <div class='notification_container_inside_date'>Data: ".$notification["object"]->created_at."</div>";
+                $respuesta.="       <input class='notification_container_inside_id' type='hidden' value='".$notification["object"]->id."'>";
+                $respuesta.="       <input class='notification_container_inside_type' type='hidden' value='".$notification["object"]->tipo."'>";
+                $respuesta.="   </div>";
+                $respuesta.="</div>";
+                $counter++;
+            break;
+             case 2:
+                $respuesta.="<div class='notification_container'>";
+                $respuesta.="   <div class='notification_container_inside'>";
+                $respuesta.="       <span class='notification_container_inside_title'><a href='' class='origin_emaillink'>Solicitacao aceitada<span>";
+                $respuesta.="           <hr>";
+                $respuesta.="       <div class='notification_container_inside_body'>".$notification["object"]->texto."</div>";
+                $respuesta.="       <div class='notification_container_inside_date'>Data: ".$notification["object"]->created_at."</div>";
+                $respuesta.="       <input class='notification_container_inside_id' type='hidden' value='".$notification["object"]->id."'>";
+                $respuesta.="       <input class='notification_container_inside_type' type='hidden' value='".$notification["object"]->tipo."'>";
                 $respuesta.="   </div>";
                 $respuesta.="</div>";
                 $counter++;

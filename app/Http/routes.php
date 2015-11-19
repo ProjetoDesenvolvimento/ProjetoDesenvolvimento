@@ -31,6 +31,12 @@ Route::get('/livro/destacados/{id}', 'LivroController@getDestacados');
 Route::get('/livro/feed/', 'LivroController@getFeed');
 Route::get('/livro/feed/{id}', 'LivroController@getFeed');
 Route::get('/livro/booksbyuser/{idusuario}', 'LivroController@getBooksByUser');
+//as trocas
+Route::get('/troca/minhastrocas', 'TrocaController@getMinhasTrocas');
+Route::get('/troca/aceitartroca/{troca_id}', 'TrocaController@aceitarTroca');
+Route::get('/troca/confirmartroca/{troca_id}/{book_id}', 'TrocaController@confirmarTroca');
+Route::get('/troca/rejeitartroca/{troca_id}', 'TrocaController@rejeitarTroca');
+
 
 
 Route::get('/usuario/criarffb', 'UsuarioController@criarUsuarioFromFacebook');

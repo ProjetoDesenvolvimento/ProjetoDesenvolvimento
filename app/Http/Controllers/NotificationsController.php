@@ -31,8 +31,8 @@ class NotificationsController extends Controller
     public function getUserNotifications() {
         $user = Auth::user();
         //tipo 1 notifications estado 1 é ativo
-        if(Notification::where('emailobjeti', '=', $user->email)->where('estado', '=', 1)->where('tipo', '=', 1)->exists()){
-            $notifications=Notification::where('emailobjeti', '=', $user->email)->where('estado', '=', 1)->where('tipo', '=', 1)->get();
+        if(Notification::where('emailobjeti', '=', $user->email)->exists()){//tudas as notificacoes do usuario
+            $notifications=Notification::where('emailobjeti', '=', $user->email)->where('estado', '=', 1)->get();
             return View::make('usuario.notifications.rendernotifications', array('notifications' => $notifications));
         }else{
             //echo "nao existo";
@@ -48,18 +48,26 @@ class NotificationsController extends Controller
         //tipo 1 notifications estado 1 é ativo
         if(Notification::where('emailobjeti', '=', $user->email)->where('estado', '=', 1)->exists()){
             $notifications=Notification::where('emailobjeti', '=', $user->email)->where('estado', '=', 1)->get();
+            $notificationsresp=array();
             foreach($notifications as $notif){
                 $notif->estado=2;
-                $useraux=  DB::table('usuario')->select('nome')->where('email', "=", $notif->emailorigen)->first();
-                if($useraux){
-                    array_push($usersname,$useraux->nome);
+                if($notif->tipo==1){
+                        $useraux=  DB::table('usuario')->select('nome')->where('email', "=", $notif->emailorigen)->first();
+                        array_push($notificationsresp,array("object"=>$notif,"sourcedata"=>$useraux->nome));
+                       /* if($useraux){
+                            array_push($usersname,$useraux->nome);
+                        }else{
+                               array_push($usersname,"DESCONOCIDO!");
+                        }*/
                 }else{
-                       array_push($usersname,"DESCONOCIDO!");
+                    array_push($notificationsresp,array("object"=>$notif,"sourcedata"=>0));
                 }
 
-             //   $notif->save();
+
+
+                $notif->save();
             }
-            return View::make('usuario.notifications.rendernotifications', array('notifications' => $notifications,'users'=>$usersname));
+            return View::make('usuario.notifications.rendernotifications', array('notifications' => $notificationsresp));
         }else{
             //echo "nao existo";
         }
