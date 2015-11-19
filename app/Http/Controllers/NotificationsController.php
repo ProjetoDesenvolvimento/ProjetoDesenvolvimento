@@ -67,7 +67,7 @@ class NotificationsController extends Controller
 
                 $notif->save();
             }
-            return View::make('usuario.notifications.rendernotifications', array('notifications' => $notificationsresp));
+            return View::make('usuario.notifications.rendernotifications', array('notificationsresp' => $notificationsresp));
         }else{
             //echo "nao existo";
         }

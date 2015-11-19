@@ -126,7 +126,7 @@ class TrocaController extends Controller
             $notificacao->texto = "O usuário ".Auth::user()->nome." aceito a troca de seu livro ";
             $notificacao->tipo = 2;//informativo
             $notificacao->emailorigen =  Auth::user()->email;
-            $notificacao->emailobjeti = $troca->idsolicitante;
+            $notificacao->emailobjeti = $usuario->email;
             $notificacao->estado = 1;
             $notificacao->save();
             return view("trocas.aceitadosuccess");
