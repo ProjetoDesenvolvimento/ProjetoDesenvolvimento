@@ -4,7 +4,7 @@
     $counter=0;
     foreach($notificationsresp as $notification){
 
-        switch($notification->tipo){
+        switch($notification["object"]->tipo){
             case 1:
                 $respuesta.="<div class='notification_container'>";
                 $respuesta.="   <div class='notification_container_inside'>";
