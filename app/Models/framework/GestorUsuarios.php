@@ -7,9 +7,9 @@
 
     class GestorUsuarios{
         var $fb;
-        var $CRED_FACEBOOK_ID='120837944930073';
-        var $CRED_FACEBOOK_SECRET='b54135e8f349147d055575d344382fa4';
-        var $CRED_FACEBOOK_DEFAULTGRAPHVERSION='v2.2';
+        var $CRED_FACEBOOK_ID='1621160531481204';
+        var $CRED_FACEBOOK_SECRET='4b225cd9cc43e15170628cafd781dfca';
+        var $CRED_FACEBOOK_DEFAULTGRAPHVERSION='v2.5';
         function _construct(){
 
         }

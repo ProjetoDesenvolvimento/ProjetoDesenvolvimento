@@ -18,7 +18,7 @@
 
             //obter notificacoes iniciais
             function getNotifications(){
-                     $.get( "http://localhost/trocalivro/books/public/user/notifications", function(resp) {
+                     $.get( "/user/notifications", function(resp) {
 
                          $("#float_notifications_container").html(resp);
 
@@ -29,7 +29,7 @@
 
                 //funcao que vai executar cada certo tempo definido no inicio
             function getLastNotifications(){
-                     $.get( "http://localhost/trocalivro/books/public/user/last_notifications", function(resp) {
+                     $.get( "/user/last_notifications", function(resp) {
                      $("#float_notifications_container").fadeIn('fast');
                          $("#float_notifications_container").html(resp);
                             $(".notification_container").click(function(){
@@ -40,7 +40,7 @@
                                     case 1:
                                     //notifications
                                   /// alert("aquiii");
-                                    window.location.assign("/trocalivro/books/public/troca/minhastrocas");//um enderco para olhar os pedidos feitos de outros para mim
+                                    window.location.assign("/troca/minhastrocas");//um enderco para olhar os pedidos feitos de outros para mim
                                     break;
                                 }
 

@@ -26,11 +26,15 @@
                 <li class="navbar-link-separator">|</li>
                 <li><a href="#">sobre nós</a></li>
                 <li class="navbar-link-separator">|</li>
-                <li><a href="{{asset('login')}}">{{ Auth::check() ? Auth::user()->nome : "entrar" }}</a></li>
+                <?php if (!Auth::check()) {?>
+                <li><a href="{{asset('login')}}">entrar</a></li>
+                <?php }else{?>
+                    <?php   $linkmeus=action('LivroController@getMeusLivros',[Auth::user()->id]); ?>
+                    <li><a href="{{$linkmeus}}">{{Auth::user()->nome}}</a></li>
+                <?php }?>
+
+
                 <?php if (Auth::check()) {?>
-                <li class="navbar-link-separator">|</li>
-                <?php   $linkmeus=action('LivroController@getBooksByUser',[Auth::user()->id]); ?>
-                <li><a href="{{$linkmeus}}">meus livros</a></li>
                 <li class="navbar-link-separator">|</li>
                 <li><a href="{{asset('logout')}}">sair</a></li>
                 <?php }?>

@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Notification;
 use App\Troca;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use Auth;
 use DB;
 use App\Livro;
-use App\Notification;
 
 use App\Usuario;
 
@@ -75,7 +75,7 @@ class LivroController extends Controller
             ->where("livrousuario.estado","<", "3");
 
         if (isset($user))
-            $livros->where("livrousuario.usuario_id", "!=", $user->id);
+            $livros->where("livrousuario.usuario_id", "=", $user->id);
 
         $livros = $livros->groupby("livro.id")->get();
         //select l.id,l.titulo, usuario.id from livrousuario join livro l ON l.id = livrousuario.livro_id join usuario ON usuario.id = livrousuario.usuario_id where usuario.id != 7
@@ -84,7 +84,24 @@ class LivroController extends Controller
 
     }
 
+    /**
+     * Lista os livros cadastrados e disponiveis do usuario
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getMeusLivros() {
+        $user = Auth::user();
+        $livros = LivroUsuario::select('livro.*', 'livrousuario.id as livrousuario_id', 'usuario.nome as usuario_nome')
+            ->join("livro","livro.id", "=", "livrousuario.livro_id")
+            ->join("usuario", "usuario.id","=","livrousuario.usuario_id")
+            ->where("usuario.id","=", $user->id)
+            ->where("livrousuario.estado","<", "3")
+            ->get();
+        //select l.id,l.titulo, usuario.id from livrousuario join livro l ON l.id = livrousuario.livro_id join usuario ON usuario.id = livrousuario.usuario_id where usuario.id != 7
 
+        return view("livros.meusLivros",["livros"=> $livros]);
+
+    }
 
     /**
      * Lista os livros cadastrados e disponiveis para troca
@@ -197,13 +214,25 @@ class LivroController extends Controller
         $troca = Troca::where('livrousuario_id','=', $book_id)->whereAnd('usuario_id', '=', Auth::user()->id);
         if (!$troca->exists()) {
             $troca = new Troca();
-            $troca->livrousuario_id = $book_id;
-            $troca->usuario_id = Auth::user()->id;
+            $troca->solicitacao_A = $book_id;
             $troca->estado = 0;
             $troca->save();
 
+
             //notificar ao usuario sobre a troca feita...
             $notification=new Notification();
+
+
+
+            $usuario = Usuario::where("id","=",LivroUsuario::where("livro_id","=",$book_id)->first()->usuario_id);
+
+            $notificacao = new Notification();
+            $notificacao->texto = "O usuário ".Auth::user()->nome." solicitou a troca de um livro seu.";
+            $notificacao->tipo = 2;
+            $notificacao->emailorigen =  Auth::user()->email;
+            $notificacao->emailobjeti = $usuario->email;
+            $notificacao->estado = 1;
+            $notificacao->save();
 
 
         }else{
