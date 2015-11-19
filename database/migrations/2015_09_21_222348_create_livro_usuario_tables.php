@@ -54,6 +54,9 @@ class CreateLivroUsuarioTables extends Migration
         if (Schema::hasTable('notification'))
         Schema::drop('notification');
 
+        if (Schema::hasTable('solicitacaotroca'))
+        Schema::drop('solicitacaotroca');
+
         Schema::create('notification', function (Blueprint $table) {
             $table->increments('id');
             $table->string('texto',1500);
@@ -159,7 +162,7 @@ class CreateLivroUsuarioTables extends Migration
             $table->integer('livrousuario_id');
             $table->integer('usuario_solicitante');
             $table->integer('usuario_proprietario');
-            $table->unique(array('livrousuario_id','usuario_id'));
+           // $table->unique(array('livrousuario_id','usuario_id'));
             $table->timestamps();
         });
 

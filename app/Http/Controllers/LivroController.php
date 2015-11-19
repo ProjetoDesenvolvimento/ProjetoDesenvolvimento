@@ -8,6 +8,7 @@ use App\Http\Requests;
 use Auth;
 use DB;
 use App\Livro;
+use App\Notification;
 
 use App\Usuario;
 
@@ -200,6 +201,11 @@ class LivroController extends Controller
             $troca->usuario_id = Auth::user()->id;
             $troca->estado = 0;
             $troca->save();
+
+            //notificar ao usuario sobre a troca feita...
+            $notification=new Notification();
+
+
         }else{
             return view("livros.jaSolicitado");
         }
