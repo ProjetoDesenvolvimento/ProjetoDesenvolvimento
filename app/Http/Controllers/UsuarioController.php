@@ -1,12 +1,11 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Usuario;
 use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\framework\GestorUsuarios;
+
 class UsuarioController extends Controller
 {
 
@@ -14,16 +13,6 @@ class UsuarioController extends Controller
 
     public function __construct(Usuario $usuario){
         $this->usuario = $usuario;
-    }
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-
     }
 
     /**
@@ -59,13 +48,16 @@ class UsuarioController extends Controller
 
     }
 
+    /*
+    *   criar usaurio a partir dos dados no facebook
+    */
     public function criarUsuarioFromFacebook(){
          $gestor=new GestorUsuarios();
          $usuario=$gestor->criarUsuarioFromFacebook();
          if($usuario!=null){
             return view('usuario.resetpassword')->with('usuario', $usuario);
          }else{
-
+             return redirect()->intended('login');
          }
 
     }
@@ -94,39 +86,5 @@ class UsuarioController extends Controller
         //
         $user = $this->usuario->find($id);
         return view('usuario.show')->with('usuario', $user);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

@@ -5,16 +5,27 @@
     use DB;
     use App\Usuario;
 
+    /**
+    * Esta clase dá alguma funcionalidade para a criacao dos usuario no banco de dados, a principais funcoes sao
+    * 1) obter um link do fb para fazer login
+    * 2) obter um link do fb para criacao dos usuarios
+    * 3) criar usuario a partir dos dados do fb
+    * 4) login usuario a partir dos dados do fb
+    */
     class GestorUsuarios{
         var $fb;
-        var $CRED_FACEBOOK_ID='1621160531481204';
-        var $CRED_FACEBOOK_SECRET='4b225cd9cc43e15170628cafd781dfca';
-        var $CRED_FACEBOOK_DEFAULTGRAPHVERSION='v2.5';
+        var $CRED_FACEBOOK_ID='1621160531481204';//o id do aplicativo no fb
+        var $CRED_FACEBOOK_SECRET='4b225cd9cc43e15170628cafd781dfca';//a chave segreda do aplicativo
+        var $CRED_FACEBOOK_DEFAULTGRAPHVERSION='v2.5';//nao sei mas presisamo disso
+
         function _construct(){
 
         }
 
-
+        /**
+        *   Esta funcao permite obter um link para fazer o login e redirigir para a acao de criar um novo usuario,
+        *   Se nao esta cadastrado se cadastra e em as duas situacoes o usuario sera redirigido ao login o a reset password se é novo
+        */
         function getFacebookLoginURLforRegistry(){
           session_start();
          $this->fb = new Facebook\Facebook([
@@ -28,7 +39,7 @@
             foreach ($_SESSION as $k=>$v) {
                 if(strpos($k, "FBRLH_")!==FALSE) {
                     if(!setcookie($k, $v)) {
-                        //what??
+                        //escrever as cookies do facebook
                     } else {
                         $_COOKIE[$k]=$v;
                     }
@@ -37,8 +48,13 @@
             session_write_close();
             return $loginUrl;
         }
+
+        /**
+        *   obtem um link para fazer login no fb com uma redirecao para a pagina de login automatico
+        */
         function getFacebookLoginURLforLogin(){
           session_start();
+          //objecto fb inicializado
          $this->fb = new Facebook\Facebook([
               'app_id' => $this->CRED_FACEBOOK_ID,
               'app_secret' => $this->CRED_FACEBOOK_SECRET
@@ -50,7 +66,7 @@
             foreach ($_SESSION as $k=>$v) {
                 if(strpos($k, "FBRLH_")!==FALSE) {
                     if(!setcookie($k, $v)) {
-                        //what??
+                        //criar as cookis do usuario
                     } else {
                         $_COOKIE[$k]=$v;
                     }
@@ -59,20 +75,17 @@
             session_write_close();
             return $loginUrl;
         }
-
-    function checkIfUserExists($user){
-
-
-    }
-
+    /**
+    *   a partir dos dados do facebook fazer login, se o usuario existe faz login, se nao cria e redirecciona para resetar a senha.
+    */
     function loginUsuarioFromFacebook(){
         session_start();
 
             foreach ($_COOKIE as $k=>$v) {
-            if(strpos($k, "FBRLH_")!==FALSE) {
-                $_SESSION[$k]=$v;
+                if(strpos($k, "FBRLH_")!==FALSE) {
+                    $_SESSION[$k]=$v;
+                }
             }
-        }
 
           $this->fb = new Facebook\Facebook([
           'app_id' => $this->CRED_FACEBOOK_ID,
@@ -97,20 +110,14 @@
               exit;
             }
 
-
-
             $oAuth2Client = $this->fb->getOAuth2Client();
 
             // Get the access token metadata from /debug_token
             $tokenMetadata = $oAuth2Client->debugToken($accessToken);
-
-
             // Validation (these will throw FacebookSDKException's when they fail)
             $tokenMetadata->validateAppId($this->CRED_FACEBOOK_ID);
             // If you know the user ID this access token belongs to, you can validate it here
-
             $tokenMetadata->validateExpiration();
-
             if (! $accessToken->isLongLived()) {
               // Exchanges a short-lived access token for a long-lived one
               try {
@@ -119,8 +126,6 @@
 
                 exit;
               }
-
-            }else{
 
             }
 
@@ -137,7 +142,7 @@
            //   echo 'Facebook SDK returned an error: ' . $e->getMessage();
               exit;
             }
-
+            //obtemos os dados do usuario
             $user = $response->getGraphUser();
             $usuario=new Usuario();
             $usuario->nome=$user['name'];
@@ -160,15 +165,19 @@
 
             session_write_close();
     }
+
+    /**
+    *   criar um novo usuario a partir dos dados no facebook.
+    */
     function criarUsuarioFromFacebook(){
 
         session_start();
 
             foreach ($_COOKIE as $k=>$v) {
-            if(strpos($k, "FBRLH_")!==FALSE) {
-                $_SESSION[$k]=$v;
+                if(strpos($k, "FBRLH_")!==FALSE) {
+                    $_SESSION[$k]=$v;
+                }
             }
-        }
 
 
 
@@ -183,41 +192,28 @@
             try {
               $accessToken = $helper->getAccessToken();
             } catch(Facebook\Exceptions\FacebookResponseException $e) {
-              // When Graph returns an error
-              //echo 'Graph returned an error: ' . $e->getMessage();
+
               exit;
             } catch(Facebook\Exceptions\FacebookSDKException $e) {
-              // When validation fails or other local issues
-            //  echo 'Facebook SDK returned an error: ' . $e->getMessage();
-             // var_dump($fb);
               exit;
             }
 
             if (! isset($accessToken)) {
               if ($helper->getError()) {
                 header('HTTP/1.0 401 Unauthorized');
-              //  echo "Error: " . $helper->getError() . "\n";
-               // echo "Error Code: " . $helper->getErrorCode() . "\n";
-               // echo "Error Reason: " . $helper->getErrorReason() . "\n";
-              //  echo "Error Description: " . $helper->getErrorDescription() . "\n";
               } else {
                 header('HTTP/1.0 400 Bad Request');
-              //  echo 'Bad request';
               }
               exit;
             }
 
-            // Logged in
-           // echo '<h3>Access Token</h3>';
-          //  var_dump($accessToken->getValue());
 
             // The OAuth 2.0 client handler helps us manage access tokens
             $oAuth2Client = $this->fb->getOAuth2Client();
 
             // Get the access token metadata from /debug_token
             $tokenMetadata = $oAuth2Client->debugToken($accessToken);
-          //  echo '<h3>Metadata</h3>';
-            //var_dump($tokenMetadata);
+
 
             // Validation (these will throw FacebookSDKException's when they fail)
             $tokenMetadata->validateAppId($this->CRED_FACEBOOK_ID);
@@ -236,8 +232,6 @@
                 exit;
               }
 
-             // echo '<h3>Long-lived</h3>';
-            //  var_dump($accessToken->getValue());
             }else{
               //  echo "no es long lived";
             }
@@ -255,8 +249,18 @@
            //   echo 'Facebook SDK returned an error: ' . $e->getMessage();
               exit;
             }
-
             $user = $response->getGraphUser();
+
+            /**
+            *   verificar se o usuario já esta cadastrado
+            */
+            if(Usuario::where('nome', '=', $user['name'])->where('email', '=',  $user['email'])->exists()){
+               return null;
+            }
+
+            /**
+            *   criar usuario no banco
+            */
             $usuario=new Usuario();
             $usuario->nome=$user['name'];
             $usuario->email=$user['email'];
@@ -273,9 +277,7 @@
 
             session_write_close();
 
-}
-
-
+        }
 
     }
 
