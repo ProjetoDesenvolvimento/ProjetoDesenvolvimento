@@ -1,6 +1,25 @@
 @extends('layouts.master')
 
 @section('content')
+
+<style>
+    .btn-facebook a{
+        color: #fff;
+        text-decoration: none ;
+    }
+    .btn-facebook a:visited{
+        color: #fff;
+    }
+    .btn-facebook a:hover{
+        color: #fff;
+    }
+    .btn-facebook{
+        background-color: #354c8c;
+        color:#FFF;
+    }
+
+
+</style>
 <!-- resources/views/auth/login.blade.php -->
 <div class="container">
     <div class="row">
@@ -26,9 +45,9 @@
 
                             </div>
                             <!-- Change this to a button or input when using this as a form -->
-                            <button type="submit" class="btn btn-sm btn-success">Login</button>
-                            <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-                            </fb:login-button>
+                            <button type="submit" class="btn btn-sm btn-success">Entrar</button>
+
+                            <div class="btn btn-sm btn-facebook"><a href="{{$loginUrl}}">Entrar com Facebook</div>
                         </fieldset>
                     </form>
                 </div>
