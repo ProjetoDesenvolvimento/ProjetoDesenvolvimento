@@ -45,33 +45,19 @@
     </div>
     <!-- Termina -->
 
-    <div class="row t3-content">
-      <h3>Olá {!! $user["email"] !!}</h3>
-
-      <div><a href="usuario/create">Criar usuario</a></div>
-      <div><a href="livro/show">Mostra livros</a></div>
-      <div><a href="livros/create">Cadastrar livro</a></div>
-      <div><a href="livro/trocar">Trocar livro</a></div>
-      <div><a href="<?php echo action("LivroController@getDestacados");?>">Prueba</a></div>
-
-    </div>
 <script>
 
-$(document).ready(function(){
-     //alert("entree");
-    getDestacados();
+    $(document).ready(function(){
+         //alert("entree");
+        getDestacados();
 
-});
+    });
 
-            function getDestacados(){
-            //alert("dentro de destacados");
-                     $.get( "/livro/destacados", function(resp) {
-                   //  alert(resp);
-                         $("#slider_inneritemscontainer").html(resp);
-
-                    });
-
-            }
+    function getDestacados(){
+        $.get( "/livro/destacados", function(resp) {
+            $("#slider_inneritemscontainer").html(resp);
+        });
+    }
 
 </script>
 <style>

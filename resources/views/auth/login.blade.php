@@ -23,10 +23,12 @@
                                 <label>
                                     <input name="remember" type="checkbox" value="Remember Me">Lembrar de mim
                                 </label>
-                                <a href="{{$loginUrl}}">Ingrese con Facebook</a>
+
                             </div>
                             <!-- Change this to a button or input when using this as a form -->
                             <button type="submit" class="btn btn-sm btn-success">Login</button>
+                            <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+                            </fb:login-button>
                         </fieldset>
                     </form>
                 </div>
