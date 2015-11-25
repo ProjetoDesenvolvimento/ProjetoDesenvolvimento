@@ -218,7 +218,7 @@ class LivroController extends Controller
          array_push($arrayitemsid,$id[0]);
         // echo "entreee  ";
         }
-        $troca = Troca::where('solicitacao_A','=', $book_id)->whereIn('solicitacao_B',$arrayitemsid)->get();
+        $troca = Troca::where('solicitacao_A','=', $book_id)->where('idsolicitante',"=",Auth::user()->id)->get();
         //var_dump($troca);
         if (!$troca||count($troca)==0) {
             $troca = new Troca();
