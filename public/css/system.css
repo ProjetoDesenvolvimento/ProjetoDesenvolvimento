@@ -11,6 +11,22 @@ input[type="text"]:focus,
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(89, 179, 173, 0.6);
 }
 
+
+.btn-facebook a{
+    color: #fff;
+    text-decoration: none ;
+}
+.btn-facebook a:visited{
+    color: #fff;
+}
+.btn-facebook a:hover{
+    color: #fff;
+}
+.btn-facebook{
+    background-color: #354c8c;
+    color:#FFF;
+}
+
 .tl-container{
     background:url("http://res.cloudinary.com/trocalivrosenac/image/upload/v1445122284/bg_livro3B_rv1srw.png") no-repeat;
     background-size: cover;
@@ -22,10 +38,6 @@ input[type="text"]:focus,
 }
 .top-buffer{
     margin-top: 15px;
-}
-
-.navbar-default{
-    box-shadow: 0 10px 10px #ccc;
 }
 
 .navbar-default ul > li > a {

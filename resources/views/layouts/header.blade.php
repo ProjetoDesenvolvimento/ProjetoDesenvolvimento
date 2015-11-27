@@ -29,7 +29,7 @@
                 <?php if (!Auth::check()) {?>
                 <li><a href="{{asset('login')}}">entrar</a></li>
                 <?php }else{?>
-                    <?php   $linkmeus=action('LivroController@getMeusLivros',[Auth::user()->id]); ?>
+                    <?php   $linkmeus=action('UsuarioController@getMeusDados',[Auth::user()->id]); ?>
                     <li><a href="{{$linkmeus}}">{{Auth::user()->nome}}</a></li>
                 <?php }?>
 

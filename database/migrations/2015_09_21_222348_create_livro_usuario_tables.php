@@ -12,6 +12,8 @@ class CreateLivroUsuarioTables extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('users'))
+            Schema::drop('users');
         if (Schema::hasTable('autor'))
         Schema::drop('autor');
 
@@ -127,6 +129,7 @@ class CreateLivroUsuarioTables extends Migration
             $table->integer('livro_id');
             $table->integer('usuario_id');
             $table->integer('estado');
+            $table->integer('disponibilidade')->default('1');
             $table->timestamps();
         });
 
@@ -177,7 +180,7 @@ class CreateLivroUsuarioTables extends Migration
             $table->integer('idsolicitante');
             $table->index('solicitacao_A');
             $table->index('solicitacao_B');
-            $table->unique(array('solicitacao_A','solicitacao_B'));
+            $table->unique(array('solicitacao_A','solicitacao_B','idsolicitante'));
             $table->timestamps();
         });
 
@@ -198,6 +201,7 @@ class CreateLivroUsuarioTables extends Migration
      */
     public function down()
     {
+        Schema::drop('users');
         Schema::drop('autor');
         Schema::drop('genero');
         Schema::drop('livro');
@@ -212,5 +216,6 @@ class CreateLivroUsuarioTables extends Migration
         Schema::drop('telefone');
         Schema::drop('recomendacao');
         Schema::drop('notification');
+        Schema::drop('migrations');
     }
 }

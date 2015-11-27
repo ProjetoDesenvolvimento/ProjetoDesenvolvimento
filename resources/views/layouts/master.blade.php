@@ -3,7 +3,6 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-        <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,300,700,300italic,400italic,500italic' rel='stylesheet' type='text/css'>
         <title>TrocaLivro {{ isset($title) ? $title : "" }}</title>
         <link rel="shortcut icon" href="http://res.cloudinary.com/trocalivrosenac/image/upload/v1448120477/tl_favicon_qbbmxp.ico" type="image/x-icon"/>
         <link rel="stylesheet" href="{{ asset('css/fonts.css') }}">
@@ -16,12 +15,6 @@
 
         <script src="{{ asset('js/select2.min.js') }}"></script>
 
-
-
-        <!--
-      <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/css/select2.min.css" rel="stylesheet" />
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
-      -->
   </head>
   <body>
 
@@ -33,12 +26,9 @@
 
 
 
-      <?php if(session()->get("usuariologeado" )=="SIM"):?>
-            @include('layouts.notifications');
-      <?php endif;?>
-
-
-
+      <?php if(Auth::check()){ ?>
+            @include('layouts.notifications')
+      <?php } ?>
 
         @include('layouts.footer')
 

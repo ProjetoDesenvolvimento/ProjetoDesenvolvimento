@@ -34,26 +34,30 @@ class TrocaController extends Controller
         echo  print_r(session()->get('user'),true);
     }
 
+
+    public function minhasSolicitacoes() {
+        $user = Auth::user();
+        $solicitudesresp=array();
+        $meuslivros=LivroUsuario::select("id")->where("usuario_id","=",$user->id)->where("disponibilidade","=",1)->get();//obter os livros do usuario atual
+        $meuslivrosarray=array();
+        foreach($meuslivros as $liv){
+            array_push($meuslivrosarray,$liv->id);
+        }
+        $solicitacaostroca = Troca::whereIn('solicitacao_A',$meuslivrosarray)->where("estado","=",1)->get();//obter as solicitudes de troca a partir dos livros do usuario
+        foreach($solicitacaostroca as $solicitude){
+            $usuario = Usuario::where("id","=",$solicitude->idsolicitante)->first();
+            $livro=Livro::where("id","=",$solicitude->solicitacao_A)->first();
+            array_push($solicitudesresp,array("object"=>$solicitude,"userdata"=>$usuario,"livrodetail"=>$livro));
+        }
+        return $solicitudesresp;
+    }
+
     /**
     *   esta funcao obtem as trocas do usuario logado atualmente e que estejam ativas.
     */
     public function getMinhasTrocas(){
-         $user = Auth::user();
-         $solicitudesresp=array();
-         $meuslivros=LivroUsuario::select("id")->where("usuario_id","=",$user->id)->where("estado","=",1)->get();//obter os livros do usuario atual
-         $meuslivrosarray=array();
-         foreach($meuslivros as $liv){
-            array_push($meuslivrosarray,$liv->id);
-
-          }
-          $solicitacaostroca = Troca::whereIn('solicitacao_A',$meuslivrosarray)->where("estado","=",1)->get();//obter as solicitudes de troca a partir dos livros do usuario
-          foreach($solicitacaostroca as $solicitude){
-            $usuario = Usuario::where("id","=",$solicitude->idsolicitante)->first();
-            $livro=Livro::where("id","=",$solicitude->solicitacao_A)->first();
-            array_push($solicitudesresp,array("object"=>$solicitude,"userdata"=>$usuario,"livrodetail"=>$livro));
-          }
-         return view("trocas.minhas" ,array("solicitudesresp"=>$solicitudesresp));
-
+        $solicitudesresp = $this->minhasSolicitacoes();
+        return view("trocas.minhas" ,array("solicitudesresp"=>$solicitudesresp));
     }
 
     /**
@@ -75,13 +79,11 @@ class TrocaController extends Controller
                 ->join("livro","livro.id", "=", "livrousuario.livro_id")
                 ->join("usuario", "usuario.id","=","livrousuario.usuario_id")
                 ->where("usuario.id","=", $usuario->id)
-                ->where("livrousuario.estado","<", "3")
+                ->where("livrousuario.disponibilidade","!=", "0")
                 ->get();//obtemos os livros os quais o usuario atual pode selecionar do outro usuario.
 
             return view("trocas.aceitado_step1",array("troca"=>$troca,"usuario"=>$usuario,"livros"=>$livros));
-
         }
-
     }
 
     /**
@@ -90,10 +92,11 @@ class TrocaController extends Controller
      public function confirmarTroca($troca_id,$livro_id)//livro seleccionado
     {
 
-            if (Auth::check()){
-                $user = Auth::user();
-            }
+        if (!Auth::check()){
+            return redirect()->intended('login');
+        }
 
+        $user = Auth::user();
         $troca= Troca::where('id',"=",$troca_id)->first();//obtemos a troca  para verificar se existe
         if($troca)
         {
@@ -109,14 +112,17 @@ class TrocaController extends Controller
                 $troca->solicitacao_B=$livro->livro_id;
                 $troca->estado=3;//aceitado
                 $troca->save();//salvamos
-                $livro->usuario_id=$user->id;
+
+                // Invalida o livro
+                $livro->disponibilidade = 0; // Indisponivel
                 $livro->save();//trocamos o dono do livro para que seja do usuario atual
+
                 $livrodado=LivroUsuario::where("livro_id","=", $troca->solicitacao_A)->first();//obtemos nosso livro solicitado
-                $livrodado->usuario_id=$troca->idsolicitante;//damos nosso livro par o outro usuario
+                $livrodado->disponibilidade = 0; // Indisponivel
                 $livrodado->save();//salvamos
                 //notificamos
                 $notificacao = new Notification();
-                $notificacao->texto = "O usuário ".Auth::user()->nome." aceito a troca de seu livro ";
+                $notificacao->texto = "O usuário ".Auth::user()->nome." aceitou a troca de seu livro";
                 $notificacao->tipo = 2;//informativo
                 $notificacao->emailorigen =  Auth::user()->email;
                 $notificacao->emailobjeti = $usuario->email;
@@ -145,6 +151,24 @@ class TrocaController extends Controller
         }else{
             return "Nada feito";
         }
+    }
+
+
+    public function minhasTrocas() {
+        $user = Auth::user();
+        $solicitudesresp=array();
+        $meuslivros=LivroUsuario::select("id")->where("usuario_id","=",$user->id)->where("disponibilidade","=",0)->get();//obter os livros do usuario atual
+        $meuslivrosarray=array();
+        foreach($meuslivros as $liv){
+            array_push($meuslivrosarray,$liv->id);
+        }
+        $solicitacaostroca = Troca::whereIn('solicitacao_A',$meuslivrosarray)->where("estado","=",3)->get();//obter as solicitudes de troca a partir dos livros do usuario
+        foreach($solicitacaostroca as $solicitude){
+            $usuario = Usuario::where("id","=",$solicitude->idsolicitante)->first();
+            $livro=Livro::where("id","=",$solicitude->solicitacao_A)->first();
+            array_push($solicitudesresp,array("object"=>$solicitude,"userdata"=>$usuario,"livrodetail"=>$livro));
+        }
+        return $solicitudesresp;
     }
 
 }

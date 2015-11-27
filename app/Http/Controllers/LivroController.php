@@ -71,8 +71,7 @@ class LivroController extends Controller
 
         $livros = LivroUsuario::select(DB::Raw('count(livro.id) as total, livro.*'))
             ->join("livro","livro.id", "=", "livrousuario.livro_id")
-            ->join("usuario", "usuario.id","=","livrousuario.usuario_id")
-            ->where("livrousuario.estado","<", "3");
+            ->join("usuario", "usuario.id","=","livrousuario.usuario_id");
 
         if (isset($user))
             $livros->where("livrousuario.usuario_id", "=", $user->id);
@@ -84,12 +83,8 @@ class LivroController extends Controller
 
     }
 
-    /**
-     * Lista os livros cadastrados e disponiveis do usuario
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function getMeusLivros() {
+
+    public function meusLivros() {
         $user = Auth::user();
         $livros = LivroUsuario::select('livro.*', 'livrousuario.id as livrousuario_id', 'usuario.nome as usuario_nome')
             ->join("livro","livro.id", "=", "livrousuario.livro_id")
@@ -97,6 +92,16 @@ class LivroController extends Controller
             ->where("usuario.id","=", $user->id)
             ->where("livrousuario.estado","<", "3")
             ->get();
+        return $livros;
+    }
+
+    /**
+     * Lista os livros cadastrados e disponiveis do usuario
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getMeusLivros() {
+        $livros = $this->meusLivros();
         //select l.id,l.titulo, usuario.id from livrousuario join livro l ON l.id = livrousuario.livro_id join usuario ON usuario.id = livrousuario.usuario_id where usuario.id != 7
 
         return view("livros.meusLivros",["livros"=> $livros]);
@@ -119,7 +124,6 @@ class LivroController extends Controller
             ->join("usuario", "usuario.id","=","livrousuario.usuario_id")
             ->where("livrousuario.livro_id", "=", $id)
             ->where("usuario.id","!=", $user->id)
-            ->where("livrousuario.estado","<", "3")
             ->get();
         //select l.id,l.titulo, usuario.id from livrousuario join livro l ON l.id = livrousuario.livro_id join usuario ON usuario.id = livrousuario.usuario_id where usuario.id != 7
 
@@ -138,7 +142,6 @@ class LivroController extends Controller
             ->join("livro","livro.id", "=", "livrousuario.livro_id")
             ->join("usuario", "usuario.id","=","livrousuario.usuario_id")
             ->where("usuario.id","!=", $user->id)
-            ->where("livrousuario.estado","<", "3")
             ->get();
         //select l.id,l.titulo, usuario.id from livrousuario join livro l ON l.id = livrousuario.livro_id join usuario ON usuario.id = livrousuario.usuario_id where usuario.id != 7
 
@@ -481,7 +484,7 @@ class LivroController extends Controller
         $livros = LivroUsuario::select(DB::Raw('count(livro.id) as total, livro.*'))
             ->join("livro","livro.id", "=", "livrousuario.livro_id")
             ->join("usuario", "usuario.id","=","livrousuario.usuario_id")
-            ->where("livrousuario.estado","<", "3");
+            ->where("disponibilidade", "!=", "0");
 
         if (isset($user))
             $livros->where("livrousuario.usuario_id", "!=", $user->id);
@@ -542,7 +545,7 @@ class LivroController extends Controller
         $livros = LivroUsuario::select(DB::Raw('count(livro.id) as total, livro.*'))
             ->join("livro","livro.id", "=", "livrousuario.livro_id")
             ->join("usuario", "usuario.id","=","livrousuario.usuario_id")
-            ->where("livrousuario.estado","<", "3");
+            ->where("livrousuario.disponibilidade","!=", "0");
 
         if (isset($user))
             $livros->where("livrousuario.usuario_id", "!=", $user->id);

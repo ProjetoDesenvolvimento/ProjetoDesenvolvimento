@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+use App\Livro;
 use App\Usuario;
 use Illuminate\Http\Request;
 use App\Http\Requests;
@@ -86,5 +87,20 @@ class UsuarioController extends Controller
         //
         $user = $this->usuario->find($id);
         return view('usuario.show')->with('usuario', $user);
+    }
+
+    public function getMeusDados() {
+
+        // Meus livros
+        $livro = new LivroController(new Livro());
+        $meusLivros = $livro->meusLivros();
+        // Minhas trocas
+        $troca = new TrocaController();
+        $solicitacoes = $troca->minhasSolicitacoes();
+        //
+        $minhasTrocas = $troca->minhasTrocas();
+
+        return view("usuario.meusDados", array("solicitacoes"=>$solicitacoes,"trocas"=>$minhasTrocas, "livros"=>$meusLivros));
+
     }
 }

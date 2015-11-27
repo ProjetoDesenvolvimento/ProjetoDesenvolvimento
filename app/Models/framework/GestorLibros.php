@@ -52,11 +52,10 @@ class GestorLibros {
 		$this -> fields .= "volumeInfo/publishedDate,volumeInfo/description,volumeInfo/industryIdentifiers,volumeInfo/imageLinks)";
 		$this->fieldsString=$this->fields;
 		$this -> fields = array("fields" => $this -> fields, "maxResults" => $this -> maxResults, "startIndex" => $this -> startIndex);
-
 	}
 
 	function updateFilters() {
-		$this -> fields = array("fields" => $this->fieldsString, "maxResults" => $this -> maxResults, "startIndex" => $this -> startIndex);
+		$this -> fields = array("langRestrict" => "pt", "orderBy"=>"relevance", "fields" => $this->fieldsString, "maxResults" => $this -> maxResults, "startIndex" => $this -> startIndex);
 	}
 
 

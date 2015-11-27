@@ -32,7 +32,7 @@
             </div>
             <div class="form-group">
                 {!! Form::submit('Salvar', array('class' => 'btn btn-primary')) !!}
-                <a href="{{$loginUrl}}">Regístrese con Facebook</a>
+                <div class="btn  btn-facebook"><a href="{{$loginUrl}}">Criar com Facebook</div>
             </div>
         </div>
         <input name="_token" type="hidden" value="{{ csrf_token() }}"/>
