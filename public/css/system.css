@@ -74,6 +74,7 @@ img {
 .t4-content h3{
     font-size: 1.5em;
     font-weight: 400 !important;
+    padding-bottom: 15px;
 }
 
 .t1-search{
@@ -104,7 +105,7 @@ img {
 
 }
 #carousel-t2{
-    min-height: 450px;
+    min-height: 500px;
     color: #fff;
     background-color: #59b3ad;
 }
