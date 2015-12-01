@@ -66,6 +66,16 @@ img {
     font-size: 1.7em;
     font-weight: 400 !important;
 }
+
+.t4-content {
+    padding-top: 5px;
+    color: #fff;
+}
+.t4-content h3{
+    font-size: 1.5em;
+    font-weight: 400 !important;
+}
+
 .t1-search{
     padding-top: 3%;
 }
@@ -104,10 +114,23 @@ img {
     background-color: #fff;
 }
 .tl-footer{
-    min-height: 100px;
+    min-height: 75px;
     background-color: #465955;
     bottom: -78px;
     position:relative;
+}
+.text-footer{
+    font-weight: 500;
+    color: #fff;
+    position:absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 50%;
+    height: 30%;
+    margin: auto;
+
 }
 .tl-item h4 {
     height: 70px;
@@ -123,6 +146,7 @@ img {
     vertical-align: middle;
     float: none;
 }
+
 
 @media (max-width: 767px) {
     .navbar-link-separator{

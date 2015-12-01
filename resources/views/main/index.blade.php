@@ -3,7 +3,7 @@
 @section('content')
     <div class="row tl-container">
         <div class="col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-10 col-xs-offset-1 text-center t1-content">
-            <h2>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent eget vehicula risus. Nam sed condimentum nibh. Ut ac ante accumsan, sodales odio nec, pretium tellus.</h2>
+            <h2>Sabe aquele livro que você tem em casa? </br> Troque com outra pessoa e passe a história adiante!</h2>
         </div>
 
         <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2 t1-search">
@@ -29,10 +29,10 @@
       </ol>
 
       <!-- Wrapper for slides -->
-      <fieldset>
-        <legend style="text-align:center">Livros em destaque</legend>
+      <div class="col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-10 col-xs-offset-1 text-center t4-content">
+        <h3>Confira abaixo alguns livros em destaque</h3>
         <div class="carousel-inner" id="slider_inneritemscontainer" role="listbox">    </div>
-      </fieldset>
+      </div>
       <!-- Controls -->
       <a class="left carousel-control" href="#carousel-t2" role="button" data-slide="prev">
         <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
