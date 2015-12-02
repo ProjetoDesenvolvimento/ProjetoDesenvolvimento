@@ -46,73 +46,85 @@
     <!-- Termina -->
 
     <div class="fluxo-explicacao">
-      <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1">
-        
-        <div class="col-lg-2 col-md-2 tira-padding">
-            <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 tira-padding">
-              <img src="{{ asset('images/a_fluxo.svg') }}"/>
+        <div class="col-lg-10 col-lg-offset-1 col-md-10 col-md-offset-1 text-center">
+          <h3>Confira como é fácil fazer a troca</h3>
+          <div class="row">  
+            <div class="col-lg-2 col-md-2 tira-padding">
+                <div class="col-lg-8 col-lg-offset-2 col-md-8 col-md-offset-2 tira-padding">
+                  <img src="{{ asset('images/a_fluxo.svg') }}"/>
+                </div>
+                <div class="row">
+                  <div class="col-lg-6 col-md-6 tira-padding">
+                    <span>Tenho um Livro</span>
+                  </div>
+                  <div class="col-lg-4 col-md-4 tira-padding">
+                    <img src="{{ asset('images/seta_fluxo.svg') }}"/>
+                  </div>   
+                </div>
             </div>
-            <div class="row">
-              <div class="col-lg-6 col-md-6 tira-padding">
-                <span>Tenho um Livro</span>
+
+            <div class="espaco-entre-fluxo">
+              <span></span>
+            </div>
+
+            <div class="col-lg-2 col-md-2 tira-padding">
+              <div class="col-lg-8 col-md-8 tira-padding">
+                <img src="{{ asset('images/b_fluxo.svg') }}"/>
               </div>
-              <div class="col-lg-4 col-md-4 tira-padding">
-                <img src="{{ asset('images/seta_fluxo.svg') }}"/>
-              </div>   
+              <div class="row">
+                <div class="col-lg-6 col-md-6 tira-padding">
+                  <span>Disponibilizo no TrocaLivro</span>
+                </div>
+                <div class="col-lg-4 col-md-4 tira-padding">
+                  <img src="{{ asset('images/seta_fluxo.svg') }}"/>
+                </div>
+              </div>
             </div>
-        </div>
 
-        <div class="col-lg-2 col-md-2 tira-padding">
-          <div class="col-lg-8 col-md-8 tira-padding">
-            <img src="{{ asset('images/b_fluxo.svg') }}"/>
-          </div>
-          <div class="row">
-            <div class="col-lg-6 col-md-6 tira-padding">
-              <span>Disponibilizo no TrocaLivro</span>
-            </div>
-            <div class="col-lg-4 col-md-4 tira-padding">
-              <img src="{{ asset('images/seta_fluxo.svg') }}"/>
-            </div>
-          </div>
-        </div>
+            <div class="espaco-entre-fluxo"></div>
 
-        <div class="col-lg-2 col-md-2 tira-padding">
-          <div class="col-lg-8 col-md-8 tira-padding">
-            <img src="{{ asset('images/c_fluxo.svg') }}"/>
-          </div>
-          <div class="row">
-            <div class="col-lg-6 col-md-6 tira-padding">
-              <span>Alguém gosta do meu livro</span>
+            <div class="col-lg-2 col-md-2 tira-padding">
+              <div class="col-lg-8 col-md-8 tira-padding">
+                <img src="{{ asset('images/c_fluxo.svg') }}"/>
+              </div>
+              <div class="row">
+                <div class="col-lg-6 col-md-6 tira-padding">
+                  <span>Alguém gosta do meu livro</span>
+                </div>
+                <div class="col-lg-4 col-md-4 tira-padding">
+                  <img src="{{ asset('images/seta_fluxo.svg') }}"/>
+                </div>
+              </div>
             </div>
-            <div class="col-lg-4 col-md-4 tira-padding">
-              <img src="{{ asset('images/seta_fluxo.svg') }}"/>
-            </div>
-          </div>
-        </div>
 
-        <div class="col-lg-2 col-md-2 tira-padding" >
-          <div class="col-lg-8 col-md-8 tira-padding">
-            <img src="{{ asset('images/d_fluxo.svg') }}"/>
-          </div>
-          <div class="row">
-            <div class="col-lg-6 col-md-6 tira-padding">
-              <span>Combinamos a Troca</span>
-            </div>
-            <div class="col-lg-4 col-md-4 tira-padding">
-              <img src="{{ asset('images/seta_fluxo.svg') }}" class="seta"/>
-            </div>
-          </div>
-        </div>
+            <div class="espaco-entre-fluxo"></div>
 
-        <div class="col-lg-2 col-md-2 tira-padding">
-          <div class="col-lg-8 col-md-8 tira-padding">
-            <img src="{{ asset('images/e_fluxo.svg') }}"/>
-          </div>
-          <div class="col-lg-12 col-md-12 tira-padding">
-              <span>Ajudamos o Meio Ambiente</span>
-          </div>
+            <div class="col-lg-2 col-md-2 tira-padding" >
+              <div class="col-lg-8 col-md-8 tira-padding">
+                <img src="{{ asset('images/d_fluxo.svg') }}"/>
+              </div>
+              <div class="row">
+                <div class="col-lg-6 col-md-6 tira-padding">
+                  <span>Combinamos a Troca</span>
+                </div>
+                <div class="col-lg-4 col-md-4 tira-padding">
+                  <img src="{{ asset('images/seta_fluxo.svg') }}" class="seta"/>
+                </div>
+              </div>
+            </div>
+
+            <div class="espaco-entre-fluxo"></div>
+
+            <div class="col-lg-2 col-md-2 tira-padding">
+              <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1tira-padding">
+                <img src="{{ asset('images/e_fluxo.svg') }}"/>
+              </div>
+              <div class="col-lg-12 col-md-12 tira-padding">
+                  <span>Ajudamos o Meio Ambiente</span>
+              </div>
+            </div>
+        
         </div>
-      
       </div>
     </div>
 
