@@ -47,6 +47,8 @@ input[type="text"]:focus,
 
 .jumbotron {
     padding-top: 115px !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
     background-color: transparent !important;
 }
 
@@ -117,7 +119,6 @@ img {
 .tl-footer{
     min-height: 75px;
     background-color: #465955;
-    bottom: -78px;
     position:relative;
 }
 .text-footer{
@@ -146,6 +147,22 @@ img {
     display: inline-block;
     vertical-align: middle;
     float: none;
+}
+
+.fluxo-explicacao{
+    min-height: 350px;
+
+}
+
+.fluxo-explicacao img{
+    width: 100%;
+}
+.seta{
+    padding-top: 20px;
+}
+.tira-padding{
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
 
 
