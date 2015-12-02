@@ -164,6 +164,13 @@ img {
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
+.espaco-entre-fluxo{
+    min-width: 4.175%;
+    max-width: 4.175%;
+    float: left;
+    position: relative;
+    min-height: 1px;
+}
 
 
 @media (max-width: 767px) {
