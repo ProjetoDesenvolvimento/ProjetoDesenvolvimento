@@ -3,6 +3,12 @@
 
 <div class="container-fluid">
     <fieldset>
+        <legend>Meus dados</legend>
+        <p><strong>Usuário:</strong> {{Auth::user()->nome}}</p>
+        <p><strong>Email: </strong> {{Auth::user()->email}} </p>
+    </fieldset>
+
+    <fieldset>
         <legend>Meus livros</legend>
         @if (count($livros) > 0)
         <p>Estes são os seus livros cadastrados</p>
@@ -37,7 +43,7 @@
             <div class="row">
                 <div class="col-xs-3">
                     <div class="thumbnail">
-                        <img class="group list-group-image img-responsive img-circle" src="{{$troca['livrodetail']->imagemurl}}" alt="" />
+                        <img class="group list-group-image img-responsive" src="{{$troca['livrodetail']->imagemurl}}" alt="" />
                     </div>
                 </div>
                 <div class="col-xs-5">
@@ -75,19 +81,14 @@
                     <div class="row">
                         <div class="col-xs-12 col-md-12">
                             <p><strong>Solicitante:</strong> {{$troca["userdata"]->nome}}</p>
-                            <p><strong>O Livro:</strong> {{$troca["livrodetail"]->titulo}}</p>
-                            <p><strong>Data: </strong> {{$troca["object"]->created_at}}</p>
+                            <p><strong>Livro solicitado:</strong> {{$troca["livrodetail"]->titulo}}</p>
+                            <p><strong>Data de cadastro: </strong> {{$troca["object"]->created_at}}</p>
+                            <p><strong>Estado do livro: </strong> {{$troca["object"]->estado}}</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
-
-
-
-
         @endforeach
         @else
         <p>Você não possui solicitações de troca</p>

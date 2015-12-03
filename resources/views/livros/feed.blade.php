@@ -1,20 +1,21 @@
 @extends('layouts.master')
 @section('content')
+<style>
+    .posibilidad_item{
+        height:500px;
+        margin-bottom: 20px;
+        padding:10px;
+    }
+    .posibilidad_item:hover{
+        background-color: #EEE;
+    }
+    .item_botones{
+        margin-top: 10px;
+    }
+</style>
 
 <div class="container-fluid">
-<style>
-  .posibilidad_item{
-      height:500px;
-      margin-bottom: 20px;
-      padding:10px;
-  }
-  .posibilidad_item:hover{
-      background-color: #EEE;
-  }
-  .item_botones{
-    margin-top: 10px;
-  }
-</style>
+
     <p>Estes são os livros que você pode trocar ou cadastrar</p>
     <div id="products" class="row list-group">
         @foreach ($livrosresult as $livro)
@@ -75,5 +76,5 @@
         }
         ?>
         </div>
-
+</div>
 @stop

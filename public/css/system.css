@@ -28,7 +28,7 @@ input[type="text"]:focus,
 }
 
 .tl-container{
-    background:url("http://res.cloudinary.com/trocalivrosenac/image/upload/v1445122284/bg_livro3B_rv1srw.png") no-repeat;
+    background:url("../images/background_home.png") no-repeat;
     background-size: cover;
     height: 450px;
    
@@ -134,6 +134,11 @@ img {
     margin: auto;
 
 }
+.thumbnail:hover{
+    outline: 2px #59b3a2 solid;
+
+}
+
 .tl-item h4 {
     height: 70px;
     font-weight: normal;

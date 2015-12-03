@@ -30,7 +30,7 @@
                 <li><a href="{{asset('login')}}">entrar</a></li>
                 <?php }else{?>
                     <?php   $linkmeus=action('UsuarioController@getMeusDados',[Auth::user()->id]); ?>
-                    <li><a href="{{$linkmeus}}">{{Auth::user()->nome}}</a></li>
+                    <li><!--  <span class="badge">2</span> --><a href="{{$linkmeus}}">meus dados</a></li>
                 <?php }?>
 
 

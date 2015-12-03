@@ -2,46 +2,46 @@
 
 @section('content')
 
-		<style>
-			#posibilidadescontainer {
-				max-width: 300px;
-				min-width: 300px;
-				display: none;
-				position: absolute;
-			}
-			.posibilidad_item:hover{
-				cursor: hand;
-			}
-            .row-fluid:hover{
-                background-color: #2779AA;
-                color: #FFF;
-            }
+<style>
+    #posibilidadescontainer {
+        max-width: 300px;
+        min-width: 300px;
+        display: none;
+        position: absolute;
+    }
+    .posibilidad_item:hover{
+        cursor: hand;
+    }
+    .row-fluid:hover{
+        background-color: #2779AA;
+        color: #FFF;
+    }
 
-            .posibilidad_item{
-                border: 2px solid gray;
-                margin:5px;
-                padding:5px;
-                border-radius:2px 0 2px 0;
-                background-color:rgba(255,255,255,0.6);
-                color:black;
-                font-size:1.2em;
-                z-index:10000;
+    .posibilidad_item{
+        border: 2px solid gray;
+        margin:5px;
+        padding:5px;
+        border-radius:2px 0 2px 0;
+        background-color:rgba(255,255,255,0.6);
+        color:black;
+        font-size:1.2em;
+        z-index:10000;
 
-            }
+    }
 
-            #posibilidades{
-                max-height:350px;
-                overflow-y:scroll;
-                box-shadow: 0 0 5px black;
-                z-index:10000;
-            }
-            .book_title, .book_isbn,.book_publication, .book_paginas{
-                font-weight:900;
-                margin:5px;
-                font-size:1.2em;
-            }
+    #posibilidades{
+        max-height:350px;
+        overflow-y:scroll;
+        box-shadow: 0 0 5px black;
+        z-index:10000;
+    }
+    .book_title, .book_isbn,.book_publication, .book_paginas{
+        font-weight:900;
+        margin:5px;
+        font-size:1.2em;
+    }
 
-		</style>
+</style>
 <div class="container">
     <script src="{{ asset('js/script_paginas/script_cadastro_livros.js') }}"></script>
     <iframe style="display: none" name="framePost"></iframe>
@@ -153,7 +153,7 @@
             $(document).ready(function(){
 
                 function repoFormatResult(book) {
-                    var author = "Nao encontrado";
+                    var author = "Não encontrado";
                     if (book.authors.length > 0)
                         author = book.authors[0].nome;
                     var markup = '<div class="row-fluid">' +
@@ -179,7 +179,7 @@
                 }
 
                 $("#isbn-select").select2({
-                    placeholder: "Clique aqui e informe o nome ou o ISBN livro",
+                    placeholder: "Clique aqui e informe o nome do livro ou o ISBN livro",
                     minimumInputLength: 2,
                     containerCssClass: "dropdown",
                     ajax: {

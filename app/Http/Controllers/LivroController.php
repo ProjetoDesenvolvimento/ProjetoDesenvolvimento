@@ -386,15 +386,20 @@ class LivroController extends Controller
 
 
     public function verdato2($type,$criteria){
+        $livrosarray = $this->buscarLivros($type,$criteria);
+        return View::make('livros.asinc_livrocadastro_posibilidades', array('livrosarray' => $livrosarray));
+    }
+
+    private function buscarLivros($type="",$criteria="", $start=0, $limit=10) {
         $type = isset($type) ? $type : "isbn";
         $data = isset($criteria) ? $criteria : "";
         $ini = isset($ini) ? $ini : 0;//inicio, offset
         $quan = isset($quan) ? $quan : 10;//quantidade, limit
-      //  echo $type.$data;
+        //  echo $type.$data;
 
         $livros=null;
         $livrosarray=array();
-        $criteria_="";
+        $criteria_="titulo";
 
         //echo "datoos ".$type.$data;
         switch ($type) {
@@ -416,65 +421,80 @@ class LivroController extends Controller
                 break;
 
             default :
-             $criteria_="idgb";
+                $criteria_="idgb";
                 break;
         }
-            $livros=Livro::where($criteria_, 'LIKE', '%'.$criteria.'%')->take(10)->get();
+        $livros=Livro::where($criteria_, 'LIKE', '%'.$criteria.'%')->take($limit)->get();
 
-            $nlivros=count($livros);
+        $nlivros=count($livros);
 
-    if($nlivros>0){
-        foreach($livros as $liv){
-            array_push($livrosarray,$liv);
+        if($nlivros>0){
+            foreach($livros as $liv){
+                array_push($livrosarray,$liv);
+            }
         }
-    }
-    if($nlivros<10){
-               // echo "menos de diez".$nlivros;
-                $nlivros=10-$nlivros;
+        if($nlivros<10){
+            // echo "menos de diez".$nlivros;
+            $nlivros=10-$nlivros;
 
-        $gestor = new GestorLibros();
+            $gestor = new GestorLibros();
 
-        switch ($type) {
-            case 'isbn' :
-                //	echo "finnn";
-                $libros = $gestor -> searchBooksByISBN($data);
-                $crieteria="isbn";
+            switch ($type) {
+                case 'isbn' :
+                    //	echo "finnn";
+                    $libros = $gestor -> searchBooksByISBN($data);
+                    $crieteria="isbn";
 
-                break;
+                    break;
 
-            case 'title' :
-                $libros = $gestor -> searchBooksByTitle($data);
-                $criteria="titulo";
-                break;
+                case 'title' :
+                    if (!empty($limit)) {
+                        $gestor->maxResults = $limit;
+                    }
+                    if (!empty($start)) {
+                        $gestor->startIndex = $start;
+                    }
+                    $libros = $gestor -> searchBooksByTitle($data);
+                    $criteria="titulo";
+                    break;
 
-            case 'description' :
-                $libros = $gestor -> searchBooksByDescription($data);
-                $criteria="descricao";
-                break;
-                    case 'year' :
-                $libros = $gestor -> searchBooksByAllCriteria($data);
-                break;
+                case 'description' :
+                    $libros = $gestor -> searchBooksByDescription($data);
+                    $criteria="descricao";
+                    break;
+                case 'year' :
+                    $libros = $gestor -> searchBooksByAllCriteria($data);
+                    break;
 
 
-            case 'feed':
-                $user=new User();
-                $user->setIdusuario('');
-                $libros = $gestor -> getBooksToFeed($ini,$quan);
-                break;
+                case 'feed':
+                    $user=new User();
+                    $user->setIdusuario('');
+                    $libros = $gestor -> getBooksToFeed($ini,$quan);
+                    break;
 
-            default :
-                break;
-        }
+                default :
+                    break;
+            }
 
         }
 
         foreach ($libros as $livro) {
+            // Se o tamanho do titulo for maior que 25 corta
+            if (strlen($livro->titulo) > 25){
+                $livro->titulo = substr ($livro->titulo,0,25) . '...';
+            }
             array_push($livrosarray,$livro);
         }
-
-        return View::make('livros.asinc_livrocadastro_posibilidades', array('livrosarray' => $livrosarray));
+        return $livrosarray;
     }
 
+    public function getBuscar(Request $req, $startIndex=0,$limit=12) {
+
+        $livros = $this->buscarLivros("title",$req->get("busca"), $startIndex, $limit);
+        return View::make('livros.feed',
+            array('livrosresult' => $livros,'start'=>$startIndex,'limit'=>$limit));
+    }
 
     public function getFeed($startIndex=0,$limit=12){
         if (Auth::check()){
@@ -498,6 +518,11 @@ class LivroController extends Controller
             if (strlen($livro->titulo) > 25){
                 $livro->titulo = substr ($livro->titulo,0,25) . '...';
             }
+
+            if($livro->imagemurl == "") {
+                $livro->imagemurl = "../images/capa_padrao.jpg";
+            }
+
             array_push($livrosArray,$livro);
 
         }
@@ -507,6 +532,9 @@ class LivroController extends Controller
         foreach($livrosGB as $livro){
             if (strlen($livro->titulo) > 25){
                 $livro->titulo = substr ($livro->titulo,0,25) . '...';
+            }
+            if($livro->imagemurl == "") {
+                $livro->imagemurl = "../images/capa_padrao.jpg";
             }
             array_push($livrosArray, $livro);
         }
@@ -533,6 +561,9 @@ class LivroController extends Controller
             }
         }
 
+        if($livro->imagemurl == "") {
+            $livro->imagemurl = "../images/capa_padrao.jpg";
+        }
 
         return View::make('livros.tenho', array('livro' => $livro));
     }
@@ -568,6 +599,9 @@ class LivroController extends Controller
         foreach($livrosGB as $livro){
             if (strlen($livro->titulo) > 25){
                 $livro->titulo = substr ($livro->titulo,0,25) . '...';
+            }
+            if($livro->imagemurl == "") {
+                $livro->imagemurl = "../images/capa_padrao.jpg";
             }
             array_push($livrosArray, $livro);
         }

@@ -1,8 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-<!-- resources/views/auth/login.blade.php -->
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col-sm-6 col-md-4 col-md-offset-4">
             <div class="login-panel panel panel-default">
@@ -14,10 +13,10 @@
                         {!! csrf_field() !!}
                         <fieldset>
                             <div class="form-group">
-                                <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus="">
+                                <input class="form-control" placeholder="E-mail" name="email" type="email" autofocus="" />
                             </div>
                             <div class="form-group">
-                                <input class="form-control" placeholder="Senha" name="senha" type="password" value="">
+                                <input class="form-control" placeholder="Senha" name="senha" type="password" value="" />
                             </div>
                             <!--
                             <div class="checkbox">
@@ -30,7 +29,9 @@
                             <!-- Change this to a button or input when using this as a form -->
                             <button type="submit" class="btn  btn-success">Entrar</button>
 
-                            <div class="btn btn-facebook"><a href="{{$loginUrl}}">Entrar com Facebook</div>
+                            <div class="btn btn-facebook">
+                                <a href="{{$loginUrl}}">Entrar com Facebook</a>
+                            </div>
                         </fieldset>
                     </form>
                 </div>

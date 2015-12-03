@@ -427,6 +427,10 @@ class GestorLibros {
 			return false;
 		}
 
+		if($livro->imagemurl == "") {
+			$livro->imagemurl = "../images/capa_padrao.jpg";
+		}
+
 		$data=array(
 			"isbn"=>$livro->isbn,
 			"idgb"=>$livro->idgb,
@@ -435,7 +439,9 @@ class GestorLibros {
 			"descricao"=>$livro->descricao,
 			"ano"=>$livro->ano,
 			"paginas"=>$livro->paginas,
-			"imagemurl"=>$livro->imagemurl,"created_at"=>$livro->created_at,"updated_at"=>$livro->updated_at);
+			"imagemurl"=>$livro->imagemurl,
+			"created_at"=>$livro->created_at,
+			"updated_at"=>$livro->updated_at);
 		$id= Livro::insertGetId($data);
 		$livro->id=$id;
 

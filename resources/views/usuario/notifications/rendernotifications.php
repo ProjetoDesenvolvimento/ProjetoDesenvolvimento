@@ -8,7 +8,7 @@
             case 1:
                 $respuesta.="<div class='notification_container'>";
                 $respuesta.="   <div class='notification_container_inside'>";
-                $respuesta.="       <span class='notification_container_inside_title'><a href='' class='origin_emaillink'>".$notification["sourcedata"]."</a> esta interesado em seu livro <span>";
+                $respuesta.="       <span class='notification_container_inside_title'><a href='' class='origin_emaillink'>".$notification["sourcedata"]."</a> está interessado em seu livro <span>";
                 $respuesta.="           <hr>";
                 $respuesta.="       <div class='notification_container_inside_body'>".$notification["object"]->texto."</div>";
                 $respuesta.="       <div class='notification_container_inside_date'>Data: ".$notification["object"]->created_at."</div>";

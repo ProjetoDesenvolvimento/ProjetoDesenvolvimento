@@ -13,9 +13,7 @@
     }
 </script>
 <div class="container-fluid">
-<iframe style="display: none" name="framePost"></iframe>
-
-    <form action="{{asset('usuario/criar')}}" method="post" target="framePost">
+    <form action="{{asset('usuario/criar')}}" method="post" >
 
         <div class="col-md-6" id="mutant">
             <div class="form-group">
@@ -32,7 +30,7 @@
             </div>
             <div class="form-group">
                 {!! Form::submit('Salvar', array('class' => 'btn btn-primary')) !!}
-                <div class="btn  btn-facebook"><a href="{{$loginUrl}}">Criar com Facebook</div>
+                <div class="btn  btn-facebook"><a href="{{$loginUrl}}">Criar com Facebook</a></div>
             </div>
         </div>
         <input name="_token" type="hidden" value="{{ csrf_token() }}"/>

@@ -5,13 +5,16 @@
         <div class="col-md-10 col-md-offset-1 col-sm-10 col-sm-offset-1 col-xs-10 col-xs-offset-1 text-center t1-content">
             <h2>Sabe aquele livro que você tem em casa? </br> Troque com outra pessoa e passe a história adiante!</h2>
         </div>
+        <form action="{{asset('livro/buscar')}}" method="get">
 
-        <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2 t1-search">
-            <input class="form-control" type="text" placeholder="Digite o nome do livro que deseja encontrar..."/>
-        </div>
-        <div class="text-center col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
-            <button class="btn btn-default t1-btn" type="submit">Buscar</button>
-        </div>
+            <div class="col-lg-6 col-lg-offset-3 col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-8 col-xs-offset-2 t1-search">
+                <input class="form-control" id="busca" name="busca" type="text" placeholder="Digite o nome do livro que deseja encontrar..."/>
+            </div>
+            <div class="text-center col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3 col-xs-10 col-xs-offset-1">
+                <button class="btn btn-default t1-btn" type="submit">Buscar</button>
+            </div>
+            <input name="_token" type="hidden" value="<?php echo csrf_token() ?>"/>
+        </form>
     </div>
 
     <!-- Começa carousel -->
@@ -131,18 +134,44 @@
 <script>
 
     $(document).ready(function(){
-         //alert("entree");
+        function getDestacados(){
+            $.get( "/livro/destacados", function(resp) {
+                $("#slider_inneritemscontainer").html(resp);
+            });
+        };
+
+        function repoFormatResult(book) {
+            var author = "Nao encontrado";
+            if (book.authors.length > 0)
+                author = book.authors[0].nome;
+            var markup = '<div class="row-fluid">' +
+                '<div style="width: 100%;">' +
+                '<div style="float:left;margin-right: 10px;"><img style="width: 80px;" src="' + book.smallThumbnail + '" /></div>' +
+                '<div><span style="font-weight: bold;" class="span6">' + book.title + '</span></div>' +
+
+                '<div><span class="span6">' + author + '</span></div>';
+            '<div><span class="span6">' + book.isbn + '</span></div>';
+
+
+            if (book.description) {
+                markup += '<div style="font-size: 10px;">' + book.description + '</div>';
+            }
+            markup += '</div>' +
+                '<div style="clear:both;"></div>';
+
+            return markup;
+        };
+
+        function repoFormatSelection(book) {
+            return book.title;
+        }
+
+
+        //alert("entree");
         getDestacados();
-
     });
-
-    function getDestacados(){
-        $.get( "/livro/destacados", function(resp) {
-            $("#slider_inneritemscontainer").html(resp);
-        });
-    }
-
 </script>
+
 <style>
 
 .carousel-inner > .item > img,
@@ -162,18 +191,12 @@ a.carousel-control:hover {
 	width: 100%;
 	font-size: 1.2em;
 	text-align: center;
-
-
 }
 .slider_item_posibilidad{
 	box-shadow: 0 0 5px rgba(0,0,0,0.2);
 	margin: 20px;
 	margin-top:0px;
 	width: 25%;
-
-
-
-
 }
 
 .slider_item_posibilidad:hover .slider_posibilidaditem_options, .slider_item_posibilidad:hover .slider_item_cover{

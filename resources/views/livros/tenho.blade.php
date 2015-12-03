@@ -6,7 +6,6 @@
         <legend>Confirmação de cadastro</legend>
         <h3>Tem certeza que você tem este livro? </h3>
         <h3><small>Verifique que seja o mesmo que você tem em físico</small></h3>
-
         <form method="post" class="form" action="{!!action('LivroController@postTenho')!!}">
             <div id="posibilidad row" class="posibilidad_item">
                 <input type="hidden" class="book_id" name="id" value="{{ $livro -> id }}">
@@ -42,7 +41,7 @@
 
         <div class="row">
             <div class="col-md-6">
-                <label for="estadolivro" class="">Como esta o estado do seu livro</label>
+                <label for="estadolivro" class="">Como está o estado do seu livro</label>
                 <select name="estadolivro" class="form-control">
                     <option value="1">Bom</option>
                     <option value="2">Mais ou menos</option>

@@ -11,8 +11,8 @@
  </style>
         <script>
             $(document).ready(function(){
-               // setTimeout(getNotifications,5000);
-               setInterval(getLastNotifications,5000);
+               //setTimeout(getLastNotifications,5000);
+               // setInterval(getLastNotifications,5000);
 
             });
 
@@ -29,15 +29,14 @@
 
                 //funcao que vai executar cada certo tempo definido no inicio
             function getLastNotifications(){
-                     $.get( "/user/last_notifications", function(resp) {
-                     $("#float_notifications_container").fadeIn('fast');
-                         $("#float_notifications_container").html(resp);
-                            $(".notification_container").click(function(){
+                $.get( "/user/last_notifications", function(resp) {
+                    $("#float_notifications_container").fadeIn('fast');
+                    $("#float_notifications_container").html(resp);
+                    $(".notification_container").click(function(){
 
-                          //  alert("siii"+$(this).find(".notification_container_inside_type").val());
-                            if(!isNaN($(this).find(".notification_container_inside_type").val())){
-                                switch(parseInt($(this).find(".notification_container_inside_type").val())){
-                                    case 1:
+                        if(!isNaN($(this).find(".notification_container_inside_type").val())){
+                            switch(parseInt($(this).find(".notification_container_inside_type").val())){
+                                case 1:
                                     //notifications
                                   /// alert("aquiii");
                                     window.location.assign("/troca/minhastrocas");//um enderco para olhar os pedidos feitos de outros para mim
@@ -47,6 +46,7 @@
                             }
 
                          });
+                        setTimeout(getLastNotifications,5000);
 
                     });
 

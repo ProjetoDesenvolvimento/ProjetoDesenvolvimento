@@ -36,7 +36,7 @@ Route::get('/troca/minhastrocas', 'TrocaController@getMinhasTrocas');
 Route::get('/troca/aceitartroca/{troca_id}', 'TrocaController@aceitarTroca');
 Route::get('/troca/confirmartroca/{troca_id}/{book_id}', 'TrocaController@confirmarTroca');
 Route::get('/troca/rejeitartroca/{troca_id}', 'TrocaController@rejeitarTroca');
-
+Route::get('/livro/buscar/', 'LivroController@getBuscar');
 
 
 Route::get('/usuario/criarffb', 'UsuarioController@criarUsuarioFromFacebook');
