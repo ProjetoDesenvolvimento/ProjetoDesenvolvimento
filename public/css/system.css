@@ -1,5 +1,6 @@
 textarea:focus,
 input[type="text"]:focus,
+input[type="password"]:focus,
 .uneditable-input:focus {
     border-color: rgba(89, 179, 173, 0.8);
     outline: 0;
@@ -47,6 +48,7 @@ input[type="text"]:focus,
 
 .jumbotron {
     padding-top: 115px !important;
+    min-height: 568px;
     padding-bottom: 0 !important;
     margin-bottom: 0 !important;
     background-color: transparent !important;
@@ -79,10 +81,31 @@ img {
     padding-bottom: 15px;
 }
 
+.create-content h2{
+    font-size: 1.7em;
+    font-weight: 400 !important;
+    padding-bottom: 20px;
+    color: #465955;
+}
+
 .t1-search{
     padding-top: 3%;
 }
+.btn-success-tl{
+    background-color: #59b3ad;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500 !important;
+    margin-bottom: 10px;
+}
 
+.btn-success-tl:hover, .btn-success-tl:active, .btn-success-tl:visited, .btn-success-tl:focus{
+    color: #fff;
+}
+
+.btns-create{
+    margin-top: 30px;
+}
 .t1-btn {
     margin-top: 18px;
     color: #fff;
