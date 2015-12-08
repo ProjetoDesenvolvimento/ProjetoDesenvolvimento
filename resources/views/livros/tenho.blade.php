@@ -33,25 +33,35 @@
                         @foreach ($livro->getAutores() as $autor)
                         <input type='hidden' name='autores[]' class='livro_autor_item' value=""{{$autor->nome }}">
                         @endforeach
+
+                         <hr>
+                        <div class="row">
+                        <div class="col-md-6">
+                            <label for="estadolivro" class="">Como está o estado do seu livro</label>
+                            <select name="estadolivro" class="form-control">
+                            <option value="1">Bom</option>
+                            <option value="2">Mais ou menos</option>
+                            <option value="3">Ruim</option>
+                            </select>
+                        </div>
+                        </div>
+                        <br>
+
+                        <div class="row"> 
+                            <div class="col-md-6">
+                            <input type="submit" class="btn form-control btn-success-tl" value="Confirmar">
+                            </div>
+                        </div>
+                        
+
                     </div>
                 </div>
-               <hr>
+                   
             </div>
 
 
         <div class="row">
-            <div class="col-md-6">
-                <label for="estadolivro" class="">Como está o estado do seu livro</label>
-                <select name="estadolivro" class="form-control">
-                    <option value="1">Bom</option>
-                    <option value="2">Mais ou menos</option>
-                    <option value="3">Ruim</option>
-                </select>
-            </div>
-            <div class="col-md-6">
-                <label for="enviar" class="">Confirmar</label>
-                <input type="submit" class="btn form-control btn-warning" value="Confirmar">
-            </div>
+            
         </div>
 
 
