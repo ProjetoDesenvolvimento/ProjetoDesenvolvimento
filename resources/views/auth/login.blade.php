@@ -28,10 +28,11 @@
                             -->
                             <!-- Change this to a button or input when using this as a form -->
                             <button type="submit" class="btn  btn-success">Entrar</button>
-
-                            <div class="btn btn-facebook">
-                                <a href="{{$loginUrl}}">Entrar com Facebook</a>
-                            </div>
+                            <a href="{{$loginUrl}}">
+                                <div class="btn btn-facebook">
+                                    Entrar com Facebook
+                                </div>
+                            </a>
                         </fieldset>
                     </form>
                 </div>

@@ -13,7 +13,7 @@
             <div class="caption">
                 <div class="row">
                     <div class="col-xs-12 col-md-12">
-                        <a style="width: 100%" class="btn btn-success" href="{{asset('livro/solicitar-troca')}}/{{$livro->livrousuario_id}}">Solicitar troca</a>
+                        <a style="width: 100%" class="btn btn-success" href="{{asset('livro/solicitar-troca-usuario')}}/{{$result->livrousuario_id}}">Solicitar troca</a>
                     </div>
                 </div>
             </div>

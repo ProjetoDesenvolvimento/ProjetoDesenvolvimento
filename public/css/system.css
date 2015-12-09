@@ -12,15 +12,16 @@ input[type="text"]:focus,
 }
 
 
-.btn-facebook a{
+a .btn-facebook{
     color: #fff;
     text-decoration: none ;
 }
-.btn-facebook a:visited{
+a .btn-facebook:visited{
     color: #fff;
 }
-.btn-facebook a:hover{
-    color: #fff;
+a .btn-facebook:hover{
+    background-color: #354caa;
+    color: #FFF;
 }
 .btn-facebook{
     background-color: #354c8c;
