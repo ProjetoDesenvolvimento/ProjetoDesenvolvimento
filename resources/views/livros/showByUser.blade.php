@@ -9,7 +9,7 @@
 <div id="products" class="row list-group">
     <?php $count = 0; ?>
     @foreach ($livros as $livro)
-    <div class="tl-item item col-lg-2 col-md-4 col-sm-6 col-xs-12" data-toggle="modal" data-target="#modal{{$count}}">
+    <div class="tl-item item col-lg-2 col-md-4 col-sm-6 col-xs-12 cursor-pointer" data-toggle="modal" data-target="#modal{{$count}}">
         <div class="thumbnail">
             <h4 class=" text-center group inner list-group-item-heading">
                 {{$livro->titulo}}</h4>
@@ -17,12 +17,12 @@
             <div class="caption">
                 <div class="row">
                     <div class="col-xs-12 col-md-12">
-                        <a style="width: 100%" class="btn btn-success-tl" href="{{asset('livro/solicitar-troca')}}/{{$livro->livrousuario_id}}">Solicitar Troca</a>
+                        <a style="width: 100%" class="btn btn-success-tl">Mais Informações</a>
                     </div>
                 </div>
             </div>
-            <p class="text-center">
-                de {{$livro->usuario_nome}}</p>
+            <hr>
+            <p class="text-center text-autor"> Dono do livro: {{$livro->usuario_nome}}</p>
         </div>
     </div>
     <?php $count++; ?>
@@ -40,13 +40,34 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">{{$livro->titulo}}</h4>
+                <h4 class="modal-title text-center">{{$livro->titulo}}</h4>
             </div>
-            <div class="modal-body">
-                <p>{{$livro->descricao}}</p>
+            <div class="modal-body text-modal">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <span class="titulo-modal">Descrição:</span>
+                        <p>{{$livro->descricao}}</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <span class="titulo-modal">Data de publicação:</span>
+                        <p>{{$livro -> ano }}</p>
+                    </div>
+                        
+                    <div class="col-lg-6">
+                        <span class="titulo-modal"> ISBN: </span>
+                        <p>{{$livro -> isbn }}</p>
+                    </div>
+                </div>
+                
+
             </div>
+
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <div class="col-xs-12 col-md-12">
+                    <a style="width: 100%" class="btn btn-success-tl" href="{{asset('livro/solicitar-troca')}}/{{$livro->livrousuario_id}}">Solicitar Troca</a>
+                </div>
             </div>
         </div>
 
