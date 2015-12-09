@@ -1,7 +1,11 @@
 @extends('layouts.master')
 
 @section('content')
-<p>Estes são os livros cadastrados</p>
+<div class="container-fluid">
+    <fieldset>
+        <legend>Veja mais informações sobre o livro escolhido</legend>
+    </fieldset>
+
 <div id="products" class="row list-group">
     <?php $count = 0; ?>
     @foreach ($livros as $livro)
@@ -13,11 +17,11 @@
             <div class="caption">
                 <div class="row">
                     <div class="col-xs-12 col-md-12">
-                        <a style="width: 100%" class="btn btn-success" href="{{asset('livro/solicitar-troca')}}/{{$livro->livrousuario_id}}">Solicitar troca</a>
+                        <a style="width: 100%" class="btn btn-success-tl" href="{{asset('livro/solicitar-troca')}}/{{$livro->livrousuario_id}}">Solicitar Troca</a>
                     </div>
                 </div>
             </div>
-            <p class=" text-center">
+            <p class="text-center">
                 de {{$livro->usuario_nome}}</p>
         </div>
     </div>
@@ -25,6 +29,7 @@
     @endforeach
 </div>
 
+</div>
 <?php $i = 0;?>
 @foreach ($livros as $livro)
 <!-- Modal -->
