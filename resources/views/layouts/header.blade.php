@@ -17,7 +17,7 @@
       <li class="navbar-link-separator">|</li>
       <li><a href="/livro/create">doar livro</a></li>
       <li class="navbar-link-separator">|</li>
-      <li><a href="https://github.com/ProjetoDesenvolvimento/TrocaLivro">sobre nós</a></li>
+      <li><a href="https://github.com/ProjetoDesenvolvimento/TrocaLivro" target="_blank">sobre nós</a></li>
       <li class="navbar-link-separator">|</li>
       <?php if (!Auth::check()) {?>
         <li><a href="{{asset('login')}}">entrar</a></li>
