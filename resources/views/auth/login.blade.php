@@ -21,10 +21,11 @@
               </div>              
               <div class="form-group btns-create">
                 <button type="submit" class="btn col-lg-12 btn-success-tl">Entrar</button>
-                <div class="col-lg-12 btn btn-facebook">
-                  <a href="{{$loginUrl}}">Entrar com Facebook</a>
-
-                </div>
+                  <a href="{{$loginUrl}}">
+                      <div class="col-lg-12 btn btn-facebook">
+                        Entrar com Facebook
+                    </div>
+                  </a>
               </div>
             </fieldset>
           </form>

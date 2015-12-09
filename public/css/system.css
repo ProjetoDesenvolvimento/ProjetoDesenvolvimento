@@ -21,6 +21,12 @@ a .btn-facebook{
 a .btn-facebook:visited{
     color: #fff;
 }
+a .btn-facebook:active{
+    color: #fff;
+}
+a .btn-facebook:focus{
+    color: #fff;
+}
 a .btn-facebook:hover{
     background-color: #354caa;
     color: #FFF;
