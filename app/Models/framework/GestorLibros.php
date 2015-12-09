@@ -54,8 +54,13 @@ class GestorLibros {
 		$this -> fields = array("fields" => $this -> fields, "maxResults" => $this -> maxResults, "startIndex" => $this -> startIndex);
 	}
 
+	function addFilter($name, $filter) {
+
+		$this -> fields[$name] = $filter;
+	}
+
 	function updateFilters() {
-		$this -> fields = array("langRestrict" => "pt", "orderBy"=>"relevance", "fields" => $this->fieldsString, "maxResults" => $this -> maxResults, "startIndex" => $this -> startIndex);
+		$this -> fields = array( "orderBy"=>"relevance", "fields" => $this->fieldsString, "maxResults" => $this -> maxResults, "startIndex" => $this -> startIndex);
 	}
 
 

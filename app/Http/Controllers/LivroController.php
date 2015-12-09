@@ -527,6 +527,7 @@ class LivroController extends Controller
         }
 
         $gestor = new GestorLibros();
+        $gestor->addFilter("langRestrict", "pt");
         $livrosGB = $gestor->getBooksToFeed($startIndex*$limit,$limit-count($livrosArray));
         foreach($livrosGB as $livro){
             if (strlen($livro->titulo) > 25){
@@ -558,11 +559,12 @@ class LivroController extends Controller
             if(count($livros)>0){
                 $livro=$livros[0];
             }
+            if(is_object($livro) && $livro->imagemurl == "") {
+                $livro->imagemurl = "../images/capa_padrao.jpg";
+            }
         }
 
-        if($livro->imagemurl == "") {
-            $livro->imagemurl = "../images/capa_padrao.jpg";
-        }
+
 
         return View::make('livros.tenho', array('livro' => $livro));
     }
@@ -594,6 +596,7 @@ class LivroController extends Controller
         }
 
         $gestor = new GestorLibros();
+        $gestor->addFilter("langRestrict", "pt");
         $livrosGB = $gestor->getBooksToFeed($startIndex*$limit,$limit-count($livrosArray));
         foreach($livrosGB as $livro){
             if (strlen($livro->titulo) > 25){

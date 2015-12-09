@@ -1,6 +1,11 @@
 @extends('layouts.master')
 
 @section('content')
+<?php
+$estado = array(1 => "Bom", 2 => "Regular", 3 => "Ruim" );
+
+?>
+
 <div class="container-fluid">
     <fieldset>
         <legend>Veja mais informações sobre o livro escolhido</legend>
@@ -9,7 +14,7 @@
 <div id="products" class="row list-group">
     <?php $count = 0; ?>
     @foreach ($livros as $livro)
-    <div class="tl-item item col-lg-2 col-md-4 col-sm-6 col-xs-12 cursor-pointer" data-toggle="modal" data-target="#modal{{$count}}">
+    <div class="tl-item item col-lg-3 col-md-4 col-sm-6 col-xs-12 cursor-pointer" data-toggle="modal" data-target="#modal{{$count}}">
         <div class="thumbnail">
             <h4 class=" text-center group inner list-group-item-heading">
                 {{$livro->titulo}}</h4>
@@ -17,12 +22,13 @@
             <div class="caption">
                 <div class="row">
                     <div class="col-xs-12 col-md-12">
-<<<<<<                  <a style="width: 100%" class="btn btn-success-tl" href="{{asset('livro/solicitar-troca-usuario')}}/{{$result->livrousuario_id}}">Mais Informações</a>
->>>>>>              </div>
+                  <a style="width: 100%" class="btn btn-success-tl" >Mais Informações</a>
+              </div>
                 </div>
             </div>
             <hr>
             <p class="text-center text-autor"> Dono do livro: {{$livro->usuario_nome}}</p>
+            <p class="text-center text-autor"> Estado do livro: {{$estado[$livro->estado]}}</p>
         </div>
     </div>
     <?php $count++; ?>
@@ -66,7 +72,7 @@
 
             <div class="modal-footer">
                 <div class="col-xs-12 col-md-12">
-                    <a style="width: 100%" class="btn btn-success-tl" href="{{asset('livro/solicitar-troca')}}/{{$livro->livrousuario_id}}">Solicitar Troca</a>
+                    <a style="width: 100%" class="btn btn-success-tl" href="{{asset('livro/solicitar-troca-usuario')}}/{{$livro->livrousuario_id}}">Solicitar Troca</a>
                 </div>
             </div>
         </div>
