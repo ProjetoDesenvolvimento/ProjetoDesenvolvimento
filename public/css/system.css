@@ -1,5 +1,7 @@
 textarea:focus,
 input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
 .uneditable-input:focus {
     border-color: rgba(89, 179, 173, 0.8);
     outline: 0;
@@ -48,6 +50,7 @@ a .btn-facebook:hover{
 
 .jumbotron {
     padding-top: 115px !important;
+    min-height: 728px;
     padding-bottom: 0 !important;
     margin-bottom: 0 !important;
     background-color: transparent !important;
@@ -70,6 +73,11 @@ img {
     font-weight: 400 !important;
 }
 
+.cursor-pointer:hover{
+    cursor: pointer;
+}
+
+
 .t4-content {
     padding-top: 5px;
     color: #fff;
@@ -80,10 +88,51 @@ img {
     padding-bottom: 15px;
 }
 
+.create-content h2{
+    font-size: 1.7em;
+    font-weight: 400 !important;
+    padding-bottom: 20px;
+    color: #465955;
+}
+
 .t1-search{
     padding-top: 3%;
 }
+.btn-success-tl{
+    background-color: #59b3ad;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500 !important;
+    margin-bottom: 10px;
+}
+.btn-success-tl2{
+    background-color: #465955;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 500 !important;
+    margin-bottom: 10px;
+}
+.text-autor{
+    font-size: 15px !important;  
 
+}
+.text-modal p{
+    font-size: 17px !important;
+    font-weight: 400 !important;
+}
+.titulo-modal{
+    font-size: 20px !important;
+    font-weight: 500 !important;
+    color: #495955; 
+}
+
+.btn-success-tl:hover, .btn-success-tl2:hover, .btn-success-tl:active, .btn-success-tl:visited, .btn-success-tl:focus{
+    color: #fff;
+}
+
+.btns-create{
+    margin-top: 30px;
+}
 .t1-btn {
     margin-top: 18px;
     color: #fff;

@@ -20,7 +20,7 @@
                     <p><small><strong>ISBN: </strong> {{ $livro -> isbn }}</small></p>
 
                     <div>
-                        <a class="btn btn-info"
+                        <a class="btn btn-success-tl"
                            href="<?php echo action('LivroController@getFeed',['pag' =>0 ]);?>"> Ver mais livros</a>
                     </div>
                 </div>
